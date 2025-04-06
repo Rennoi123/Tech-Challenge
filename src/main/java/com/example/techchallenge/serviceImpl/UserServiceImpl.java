@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void delete(Long id) {
         UserEntity entity = getById(id);
         entity.setIsActive(false);
         userRepository.save(entity);
@@ -83,15 +83,5 @@ public class UserServiceImpl implements UserService {
 
         return entities;
     }
-
-    @Override
-    public void delete(Long id) {
-        UserEntity entity = getById(id);
-        entity.setIsActive(false);
-
-        userRepository.save(entity);
-    }
-
-
 
 }

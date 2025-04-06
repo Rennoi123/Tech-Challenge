@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface UserService {
      Optional<UserEntity> updateUser(UserEntity updatedData);
     UserEntity createUser(UserEntity userEntity);
-    void deleteUser(Long id);
     Boolean validateLogin(String login, String rawPassword);
     UserEntity getById(Long id);
     void delete(Long id);
