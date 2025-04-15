@@ -28,8 +28,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-     public ResponseEntity<String> loginUser(@RequestParam String login, @RequestParam String password) {
-        if (userServiceImpl.validateLogin(login, password)) {
+     public ResponseEntity<String> loginUser(@RequestBody UserRequest userRequest) {
+        if (userServiceImpl.validateLogin(userRequest.username(), userRequest.password())) {
             return ResponseEntity.ok("Login successful");
         } else {
             return ResponseEntity.status(401).body("Invalid login credentials");

@@ -11,5 +11,7 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:16-jdk
+ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8787"
+
 COPY --from=build /app/target/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]

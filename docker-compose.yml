@@ -6,10 +6,11 @@ services:
     image: tech-challenge-backend
     ports:
       - "8080:8080"
+      -  "8787:8787"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/tech_challenge_db
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 123456
     depends_on:
       - db
 
@@ -18,7 +19,7 @@ services:
     restart: always
     environment:
       POSTGRES_DB: tech_challenge_db
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
     ports:
       - "5432:5432"

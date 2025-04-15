@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(updatedData.getId()).map(existingUser -> {
             existingUser.setName(updatedData.getName());
             existingUser.setEmail(updatedData.getEmail());
-            existingUser.setLogin(updatedData.getLogin());
+            existingUser.setUsername(updatedData.getUsername());
             existingUser.setIsActive(true);
 
             if (updatedData.getPassword() != null && !updatedData.getPassword().isBlank()) {
@@ -60,8 +60,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean validateLogin(String login, String rawPassword) {
-        return userRepository.findByLogin(login)
+    public Boolean validateLogin(String username, String rawPassword) {
+        return userRepository.findByUsernameAndPassword(username,rawPassword)
                 .filter(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
                 .isPresent();
     }

@@ -2,19 +2,21 @@ package com.example.techchallenge.Request;
 
 import com.example.techchallenge.mapper.ModelMapperBase;
 import com.example.techchallenge.model.UserEntity;
-
-import java.util.Date;
-
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 public record UserRequest(
         Long id,
+        @NotBlank(message = "O nome é obrigatório")
         String name,
+        @NotBlank(message = "O e-mail é obrigatório")
+        @Email(message = "Formato de e-mail inválido")
         String email,
-        String login,
+        @NotBlank(message = "O usuário é obrigatório")
+        String username,
+        @NotBlank(message = "A senha é obrigatória")
         String password,
-        Date lastModifiedDate,
-        String address,
-        boolean isActive
+        String address
 ) {
     public UserEntity toEntity(){
         return ModelMapperBase.map(this, UserEntity.class);
