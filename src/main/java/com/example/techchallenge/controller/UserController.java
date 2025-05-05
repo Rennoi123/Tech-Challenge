@@ -21,18 +21,23 @@ public class UserController {
     @Autowired
     private UserServiceImpl userServiceImpl;
 
+
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
-        UserEntity createdUserEntity = userServiceImpl.createUser(userRequest.toEntity());
-        return ResponseEntity.status(HttpStatus.OK).body(ModelMapperBase.map(createdUserEntity, UserResponse.class));
+    public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest) {
+        try {
+            userServiceImpl.createUser(userRequest.toEntity());
+            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso!");
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @PostMapping("/login")
      public ResponseEntity<String> loginUser(@RequestBody UserRequest userRequest) {
-        if (userServiceImpl.validateLogin(userRequest.username(), userRequest.password())) {
-            return ResponseEntity.ok("Login successful");
+        if (userServiceImpl.validateLogin(userRequest.email(), userRequest.password())) {
+            return ResponseEntity.ok("Usuário Logado com Sucesso");
         } else {
-            return ResponseEntity.status(401).body("Invalid login credentials");
+            return ResponseEntity.status(401).body("Login Inválido");
         }
     }
 

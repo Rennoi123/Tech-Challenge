@@ -2,20 +2,24 @@ package com.example.techchallenge.Request;
 
 import com.example.techchallenge.mapper.ModelMapperBase;
 import com.example.techchallenge.model.UserEntity;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.sun.istack.NotNull;
+
+import javax.validation.constraints.Email;
+
 
 public record UserRequest(
         Long id,
-        @NotBlank(message = "O nome é obrigatório")
+
+        @NotNull
         String name,
-        @NotBlank(message = "O e-mail é obrigatório")
-        @Email(message = "Formato de e-mail inválido")
+        @NotNull
+        @Email
         String email,
-        @NotBlank(message = "O usuário é obrigatório")
+        @NotNull
         String username,
-        @NotBlank(message = "A senha é obrigatória")
+        @NotNull
         String password,
+        @NotNull
         String address
 ) {
     public UserEntity toEntity(){
