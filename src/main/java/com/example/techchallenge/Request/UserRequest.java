@@ -3,8 +3,7 @@ package com.example.techchallenge.Request;
 import com.example.techchallenge.mapper.ModelMapperBase;
 import com.example.techchallenge.model.UserEntity;
 import com.sun.istack.NotNull;
-
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.Email;
 
 
 public record UserRequest(
