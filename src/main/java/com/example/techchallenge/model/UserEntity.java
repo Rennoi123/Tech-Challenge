@@ -15,6 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -28,13 +29,12 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "USERS")
+@Table(name = "TB_USERS")
 @Where(clause = "is_active = true")
 public class UserEntity  implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
     private String name;
     @Column(unique = true, nullable = false)
@@ -42,7 +42,8 @@ public class UserEntity  implements UserDetails {
     private String password;
     private Boolean isActive;
     private Date lastModifiedDate;
-    private String address;
+    @OneToOne
+    private AddressEntity address;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
     @Enumerated(EnumType.STRING)

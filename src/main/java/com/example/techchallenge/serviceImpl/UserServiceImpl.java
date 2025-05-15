@@ -1,60 +1,76 @@
 package com.example.techchallenge.serviceImpl;
 
 import com.example.techchallenge.Enum.UserRoles;
+import com.example.techchallenge.Request.UserRequest;
+import com.example.techchallenge.Service.AddressService;
 import com.example.techchallenge.Service.UserService;
-import com.example.techchallenge.mapper.UserMapper;
+import com.example.techchallenge.model.AddressEntity;
 import com.example.techchallenge.model.UserEntity;
 import com.example.techchallenge.repository.UserRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper mapper;
     private final PasswordEncoder passwordEncoder;
+    private final AddressService addressService;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper mapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AddressService addressService) {
         this.userRepository = userRepository;
-        this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
+        this.addressService = addressService;
     }
 
     @Override
-    public UserEntity createUser(UserEntity userEntity) {
-        UserEntity entity = mapper.create(userEntity);
+    public UserEntity createUser(UserRequest userRequest) {
+        UserEntity entity = new UserEntity();
+        entity.setName(userRequest.name());
+        entity.setEmail(userRequest.email());
 
-        if (userRepository.findByEmail(userEntity.getEmail()).isPresent()) {
+        insertUpdateAddress(userRequest);
+
+        if (userRepository.findByEmail(userRequest.email()).isPresent()) {
             throw new IllegalArgumentException("Email já está em uso");
         }
 
-        entity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        entity.setPassword(passwordEncoder.encode(userRequest.password()));
 
         entity.setRoles(UserRoles.CLIENTE);
         entity.setIsActive(true);
         return userRepository.save(entity);
     }
 
+    private void insertUpdateAddress(UserRequest userRequest) {
+        if (userRequest.address() != null) {
+            AddressEntity addressEntity = addressService.getById(userRequest.id());
+            addressEntity.setCity(userRequest.address().city());
+            addressEntity.setComplement(userRequest.address().complement());
+            addressEntity.setNumber(userRequest.address().number());
+            addressEntity.setNeighborhood(userRequest.address().neighborhood());
+            addressEntity.setState(userRequest.address().state());
+            addressEntity.setStreet(userRequest.address().street());
+            addressEntity.setPostalCode(userRequest.address().postalCode());
+        }
+    }
+
     @Override
-    public Optional<UserEntity> updateUser(UserEntity updatedData) {
-        return userRepository.findById(updatedData.getId()).map(existingUser -> {
-            existingUser.setName(updatedData.getName());
-            existingUser.setEmail(updatedData.getEmail());
+    public Optional<UserEntity> updateUser(UserRequest userRequest) {
+        return userRepository.findById(userRequest.id()).map(existingUser -> {
+            existingUser.setName(userRequest.name());
+            existingUser.setEmail(userRequest.email());
             existingUser.setIsActive(true);
 
-            if (updatedData.getPassword() != null && !updatedData.getPassword().isBlank()) {
-                existingUser.setPassword(updatedData.getPassword());
+            if (userRequest.password() != null && !userRequest.password().isBlank()) {
+                existingUser.setPassword(userRequest.password());
             }
-
-            existingUser.setAddress(updatedData.getAddress());
+            insertUpdateAddress(userRequest);
 
             return userRepository.save(existingUser);
         });
@@ -81,9 +97,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserEntity> getAll(Integer page, Integer size) {
-        Pageable pageable = page == null || size == null ? Pageable.unpaged() : PageRequest.of(page, size);
-        Page<UserEntity> entities = userRepository.findAll(pageable);
-        return entities.isEmpty() ? null : entities;
+    public List<UserEntity> getAll() throws Exception {
+        List<UserEntity> entities = userRepository.findAll();
+        if (entities.isEmpty()) {
+            throw new Exception("Nenhum usuário encontrado.");
+        }
+        return entities;
     }
 }

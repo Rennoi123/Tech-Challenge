@@ -9,10 +9,12 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse {
-    private Long id;
-    private String name;
-    private String email;
-    private String username;
-    private String password;
+public class AddressResponse {
+    String street;
+    String number;
+    String complement;
+    String neighborhood;
+    String city;
+    String state;
+    String postalCode;
 }
