@@ -1,6 +1,7 @@
-package com.example.techchallenge.model;
+package com.example.techchallenge.entities;
 
-import com.example.techchallenge.Enum.UserRoles;
+import com.example.techchallenge.enums.UserRoles;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
@@ -8,44 +9,39 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
 
 @Getter
 @Setter
 @Entity
 @Table(name = "TB_USERS")
 @Where(clause = "is_active = true")
-public class UserEntity  implements UserDetails {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     @Column(unique = true, nullable = false)
     private String email;
+
     private String password;
+
     private Boolean isActive;
+
     private Date lastModifiedDate;
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id")
     private AddressEntity address;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
+
     @Enumerated(EnumType.STRING)
     private UserRoles roles;
 
@@ -59,6 +55,7 @@ public class UserEntity  implements UserDetails {
         createdDate = new Date();
         lastModifiedDate = new Date();
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + this.roles.name()));

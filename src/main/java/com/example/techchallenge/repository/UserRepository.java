@@ -1,7 +1,7 @@
 package com.example.techchallenge.repository;
 
 
-import com.example.techchallenge.model.UserEntity;
+import com.example.techchallenge.entities.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

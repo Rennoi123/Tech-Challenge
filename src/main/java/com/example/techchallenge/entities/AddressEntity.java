@@ -1,25 +1,10 @@
-package com.example.techchallenge.model;
+package com.example.techchallenge.entities;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.Where;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.util.Date;
-
 
 @Data
 @Entity
@@ -52,8 +37,14 @@ public class AddressEntity {
     @Column(name = "postal_code", nullable = false, length = 9)
     private String postalCode;
 
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    @Column(name = "last_modified_date")
     private Date lastModifiedDate;
+
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_date")
     private Date createdDate;
 
     @PreUpdate

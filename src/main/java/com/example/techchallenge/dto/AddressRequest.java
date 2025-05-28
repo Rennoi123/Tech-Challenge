@@ -1,9 +1,10 @@
-package com.example.techchallenge.Request;
+package com.example.techchallenge.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record AddressRequest(
+        Long id,
 
         @NotBlank(message = "Rua: é obrigatória")
         @Size(max = 100, message = "Rua: deve ter no máximo 100 caracteres")
@@ -31,5 +32,4 @@ public record AddressRequest(
         @NotBlank(message = "CEP: é obrigatório")
         @Size(min = 8, max = 9, message = "CEP: deve ter entre 8 e 9 caracteres")
         String postalCode
-){
-}
+) {}

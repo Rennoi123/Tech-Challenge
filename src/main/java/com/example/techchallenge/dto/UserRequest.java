@@ -1,7 +1,9 @@
-package com.example.techchallenge.Request;
+package com.example.techchallenge.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 
@@ -20,7 +22,8 @@ public record UserRequest(
         @Size(min = 6, message = "Senha: deve ter no mínimo 6 caracteres")
         String password,
 
-        @NotBlank(message = "Endereço: é obrigatório")
+        @NotNull(message = "Endereço: é obrigatório")
+        @Valid
         AddressRequest address
 ) {
 }

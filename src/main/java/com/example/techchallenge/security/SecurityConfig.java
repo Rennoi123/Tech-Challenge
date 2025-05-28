@@ -1,8 +1,9 @@
-package com.example.techchallenge.Security;
+package com.example.techchallenge.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,16 +17,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/users/register", "/api/users/login").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/users/**").hasRole("CLIENTE")
-                .antMatchers(HttpMethod.GET, "/api/users/{id}").hasRole("CLIENTE")
-                .antMatchers(HttpMethod.GET, "/api/users/**").hasRole("RESTAURANTE")
-                .antMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("RESTAURANTE")
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic();
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/users/**").permitAll()
+                        /*.requestMatchers(HttpMethod.PUT, "/api/users/**").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("RESTAURANTE")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("RESTAURANTE")*/
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
@@ -35,4 +36,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-
