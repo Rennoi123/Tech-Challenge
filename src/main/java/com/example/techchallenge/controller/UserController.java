@@ -4,7 +4,6 @@ import com.example.techchallenge.dto.UserRequest;
 import com.example.techchallenge.dto.UserResponse;
 import com.example.techchallenge.entities.UserEntity;
 import com.example.techchallenge.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,18 +38,18 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         List<UserEntity> users = userService.getAll();
-        List<UserResponse> responses = users.stream()
+        List<UserResponse> userResponses = users.stream()
                 .map(userService::toResponse)
                 .toList();
 
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(userResponses);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
         userRequest = new UserRequest(id, userRequest.name(), userRequest.email(), userRequest.password(), userRequest.address());
-        UserEntity updatedUser = userService.updateUser(userRequest);
-        return ResponseEntity.ok(updatedUser);
+        UserResponse userResponse = userService.updateUser(userRequest);
+        return ResponseEntity.ok(userResponse);
     }
 
     @DeleteMapping("/{id}")

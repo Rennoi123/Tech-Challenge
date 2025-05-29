@@ -12,12 +12,12 @@ import com.example.techchallenge.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class UserService {
 
-    private static final String USER_NOT_FOUND_MESSAGE = "Nenhum usuário encontrado.";
     private static final String USER_NOT_FOUND_MESSAGE_BY_ID = "Usuário não encontrado pelo id: ";
     private static final String EMAIL_NOT_FOUND_MESSAGE = "Email não encontrado.";
     private static final String INVALID_PASSWORD_MESSAGE = "Senha inválida para o email informado.";
@@ -47,11 +47,12 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
-    public UserEntity updateUser(UserRequest userRequest) {
+    public UserResponse updateUser(UserRequest userRequest) {
         validateUserRequest(userRequest);
         UserEntity existingUser = getUserById(userRequest.id());
         updateUserData(existingUser, userRequest);
-        return userRepository.save(existingUser);
+        UserEntity userEntity = userRepository.save(existingUser);
+        return toResponse(userEntity);
     }
 
     public void delete(Long id) {
@@ -78,7 +79,7 @@ public class UserService {
     public List<UserEntity> getAll() {
         List<UserEntity> users = userRepository.findAll();
         if (users.isEmpty()) {
-            throw new UserNotFoundException(USER_NOT_FOUND_MESSAGE);
+            return Collections.emptyList();
         }
         return users;
     }
@@ -133,7 +134,7 @@ public class UserService {
         user.setIsActive(true);
 
         if (userRequest.address() != null) {
-            AddressEntity address = AddressService.createOrUpdateAddress(userRequest);
+            AddressEntity address = addressService.createOrUpdateAddress(userRequest.address());
             user.setAddress(address);
         }
 
@@ -149,7 +150,7 @@ public class UserService {
         }
 
         if (userRequest.address() != null) {
-            AddressEntity address = AddressService.createOrUpdateAddress(userRequest);
+            AddressEntity address = addressService.createOrUpdateAddress(userRequest.address());
             user.setAddress(address);
         }
     }

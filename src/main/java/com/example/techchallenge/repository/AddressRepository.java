@@ -11,5 +11,4 @@ import java.util.Optional;
 @Repository
 public interface AddressRepository extends JpaRepository<AddressEntity, Long> {
     Optional<AddressEntity> findById(Long id);
-    AddressEntity saveAndFlush(AddressRepository addressRepository);
 }

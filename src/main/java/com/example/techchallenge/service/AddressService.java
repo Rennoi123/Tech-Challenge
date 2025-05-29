@@ -13,7 +13,7 @@ public class AddressService {
 
     private static final String ADDRESS_NOT_FOUND_MESSAGE = "Endereço não encontrado pelo id: ";
 
-    private static AddressRepository addressRepository = null;
+    private final AddressRepository addressRepository;
 
     public AddressService(AddressRepository addressRepository) {
         this.addressRepository = addressRepository;
@@ -28,7 +28,7 @@ public class AddressService {
         return addressRepository.existsById(id);
     }
 
-    private static AddressEntity buildAddressFromRequest(AddressRequest addressRequest) {
+    private AddressEntity buildAddressFromRequest(AddressRequest addressRequest) {
         AddressEntity address = new AddressEntity();
         address.setCity(addressRequest.city());
         address.setComplement(addressRequest.complement());
@@ -42,14 +42,14 @@ public class AddressService {
         return address;
     }
 
-    public static AddressEntity createOrUpdateAddress(UserRequest userRequest) {
-        AddressEntity addressEntity = buildAddressFromRequest(userRequest.address());
+    public AddressEntity createOrUpdateAddress(AddressRequest addressRequest) {
+        AddressEntity addressEntity = buildAddressFromRequest(addressRequest);
 
-        if (userRequest.address().id() != null && addressRepository.existsById(userRequest.address().id())) {
-            addressEntity.setId(userRequest.address().id());
+        if (addressRequest.id() != null && addressRepository.existsById(addressRequest.id())) {
+            addressEntity.setId(addressRequest.id());
         }
 
-        return addressRepository.saveAndFlush(addressEntity);
+        return addressRepository.save(addressEntity);
     }
 
 }
