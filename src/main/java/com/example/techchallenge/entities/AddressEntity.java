@@ -9,7 +9,6 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "ADDRESS")
-@Where(clause = "is_active = true")
 public class AddressEntity {
 
     @Id
@@ -36,9 +35,6 @@ public class AddressEntity {
 
     @Column(name = "postal_code", nullable = false, length = 9)
     private String postalCode;
-
-    @Column(name = "is_active")
-    private Boolean isActive = true;
 
     @Column(name = "last_modified_date")
     private Date lastModifiedDate;
