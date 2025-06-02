@@ -57,8 +57,7 @@ public class UserService {
 
     public void delete(Long id) {
         UserEntity entity = getUserById(id);
-        entity.setIsActive(false);
-        userRepository.save(entity);
+        userRepository.delete(entity);
     }
 
     public Boolean validateLogin(String email, String rawPassword) {
@@ -131,7 +130,6 @@ public class UserService {
         user.setEmail(userRequest.email());
         user.setPassword(passwordEncoder.encode(userRequest.password()));
         user.setRoles(UserRoles.CLIENTE);
-        user.setIsActive(true);
 
         if (userRequest.address() != null) {
             AddressEntity address = addressService.createOrUpdateAddress(userRequest.address());
