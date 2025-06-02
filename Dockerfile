@@ -1,4 +1,4 @@
-FROM eclipse-temurin:16-jdk AS build
+FROM eclipse-temurin:17-jdk AS build
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y maven
@@ -10,7 +10,7 @@ COPY . .
 
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:16-jdk
+FROM eclipse-temurin:17-jdk
 ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8787"
 
 COPY --from=build /app/target/*.jar app.jar

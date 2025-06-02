@@ -1,33 +1,38 @@
-package com.example.techchallenge.model;
+package com.example.techchallenge.entities;
 
-import com.example.techchallenge.Enum.UserRoles;
+import com.example.techchallenge.enums.UserRoles;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-@Where(clause = "is_active = true")
-public class UserEntity {
+@Table(name = "TB_USERS")
+public class UserEntity  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
+
     private String name;
+
+    @Column(unique = true, nullable = false)
     private String email;
-    private String username;
+
     private String password;
-    private Boolean isActive;
+
     private Date lastModifiedDate;
-    private String address;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id")
+    private AddressEntity address;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
+
     @Enumerated(EnumType.STRING)
     private UserRoles roles;
 

@@ -13,7 +13,7 @@
 
     <properties>
         <java.version>16</java.version>
-        <spring.boot.version>2.6.6</spring.boot.version>
+        <spring.boot.version>3.1.4</spring.boot.version>
     </properties>
 
     <dependencyManagement>
@@ -59,18 +59,26 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.32</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <version>3.0.2</version>
         </dependency>
+
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>jboss</id>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
-            <!-- Plugin do Spring Boot para empacotar corretamente o JAR -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -83,8 +91,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Plugin de compilação para Java 17 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
