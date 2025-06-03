@@ -37,7 +37,7 @@ public class UserService {
         this.addressService = addressService;
     }
 
-    public UserEntity createUser(UserRequest userRequest) {
+    public UserEntity createUser(UserRequest userRequest, String userRoles) {
         validateUserRequest(userRequest);
 
         if (emailExists(userRequest.email())) {
@@ -45,7 +45,15 @@ public class UserService {
         }
 
         UserEntity newUser = buildUserFromRequest(userRequest);
+
+        if(userRoles != null){
+            newUser.setRoles(UserRoles.RESTAURANTE);
+        }
         return userRepository.save(newUser);
+    }
+
+    public UserEntity createUser(UserRequest userRequest) {
+        return createUser(userRequest, null);
     }
 
     public UserResponse updateUser(UserRequest userRequest) {

@@ -29,6 +29,4 @@ public record UserRequest(
 
         UserRoles userRoles
 ) {
-        public void setUserRoles(UserRoles userRoles) {
-        }
 }

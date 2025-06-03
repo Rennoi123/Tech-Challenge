@@ -34,8 +34,7 @@ public class UserController {
 
     @PostMapping("/register-admin")
     public ResponseEntity<String> createUserAdmin(@RequestBody UserRequest userRequest) {
-        userRequest.setUserRoles(UserRoles.RESTAURANTE);
-        userService.createUser(userRequest);
+        userService.createUser(userRequest, UserRoles.RESTAURANTE.toString());
         return ResponseEntity.status(HttpStatus.CREATED).body(USER_CREATED_SUCCESS);
     }
 
