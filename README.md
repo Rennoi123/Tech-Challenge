@@ -145,10 +145,4 @@ Atualiza a senha de um usuário.
 
 ---
 
-## Testes
-Os testes unitários estão localizados no diretório `src/test/java/com/example/techchallenge`. Execute os testes usando:
-```
-mvn test
-```
-
 
