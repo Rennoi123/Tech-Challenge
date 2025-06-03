@@ -88,10 +88,11 @@ tech-challenge-backend
    ```
 
 3. Configure a conexão com o banco de dados. O projeto está configurado para usar PostgreSQL com as seguintes variáveis de ambiente no docker-compose.yml e application.properties:
-
-SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/tech_challenge_db
-SPRING_DATASOURCE_USERNAME: admin
-SPRING_DATASOURCE_PASSWORD: 123456
+   ```
+   SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/tech_challenge_db
+   SPRING_DATASOURCE_USERNAME: admin
+   SPRING_DATASOURCE_PASSWORD: 123456
+   ```
 
 4. Inicie a aplicação usando o Docker Compose para subir a aplicação e o banco de dados PostgreSQL:
    ```
