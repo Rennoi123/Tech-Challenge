@@ -21,6 +21,7 @@ public class UserService {
     private static final String USER_NOT_FOUND_MESSAGE_BY_ID = "Usuário não encontrado pelo id: ";
     private static final String EMAIL_NOT_FOUND_MESSAGE = "Email não encontrado.";
     private static final String INVALID_PASSWORD_MESSAGE = "Senha inválida para o email informado.";
+    private static final String INVALID_PASSWORD_ATUAL = "Senha atual incorreta.";
     private static final String EMPTY_EMAIL_MESSAGE = "Email não pode ser vazio.";
     private static final String EMPTY_PASSWORD_MESSAGE = "Senha não pode ser vazia.";
     private static final String EMPTY_NAME_MESSAGE = "Nome não pode ser vazio.";
@@ -73,6 +74,21 @@ public class UserService {
 
     public UserEntity getById(Long id) {
         return getUserById(id);
+    }
+
+    public void updatePassword(Long userId, String oldPassword, String newPassword) {
+        if (newPassword == null || newPassword.isBlank()) {
+            throw new IllegalArgumentException(EMPTY_PASSWORD_MESSAGE);
+        }
+
+        UserEntity user = getUserById(userId);
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new InvalidCredentialsException(INVALID_PASSWORD_ATUAL);
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     public List<UserEntity> getAll() {

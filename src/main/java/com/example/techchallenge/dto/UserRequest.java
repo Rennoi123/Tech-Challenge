@@ -1,5 +1,6 @@
 package com.example.techchallenge.dto;
 
+import com.example.techchallenge.enums.UserRoles;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,6 +25,10 @@ public record UserRequest(
 
         @NotNull(message = "Endereço: é obrigatório")
         @Valid
-        AddressRequest address
+        AddressRequest address,
+
+        UserRoles userRoles
 ) {
+        public void setUserRoles(UserRoles userRoles) {
+        }
 }

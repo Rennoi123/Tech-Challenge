@@ -1,8 +1,10 @@
 package com.example.techchallenge.controller;
 
+import com.example.techchallenge.dto.UpdatePasswrodRequest;
 import com.example.techchallenge.dto.UserRequest;
 import com.example.techchallenge.dto.UserResponse;
 import com.example.techchallenge.entities.UserEntity;
+import com.example.techchallenge.enums.UserRoles;
 import com.example.techchallenge.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ public class UserController {
 
     private static final String USER_CREATED_SUCCESS = "Usuário criado com sucesso!";
     private static final String USER_LOGGED_SUCCESS = "Usuário logado com sucesso.";
+    private static final String PASSWORD_UPDATED_SUCCESS = "Senha atualizada com sucesso.";
 
     private final UserService userService;
 
@@ -25,6 +28,13 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest) {
+        userService.createUser(userRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(USER_CREATED_SUCCESS);
+    }
+
+    @PostMapping("/register-admin")
+    public ResponseEntity<String> createUserAdmin(@RequestBody UserRequest userRequest) {
+        userRequest.setUserRoles(UserRoles.RESTAURANTE);
         userService.createUser(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(USER_CREATED_SUCCESS);
     }
@@ -53,7 +63,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
-        userRequest = new UserRequest(id, userRequest.name(), userRequest.email(), userRequest.password(), userRequest.address());
+        userRequest = new UserRequest(id, userRequest.name(), userRequest.email(), userRequest.password(), userRequest.address(), null);
         UserResponse userResponse = userService.updateUser(userRequest);
         return ResponseEntity.ok(userResponse);
     }
@@ -62,5 +72,11 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<String> updatePassword(@RequestParam Long id, @RequestBody UpdatePasswrodRequest updatePasswrodRequest) {
+        userService.updatePassword(id, updatePasswrodRequest.oldPassword(), updatePasswrodRequest.newPassword());
+        return ResponseEntity.ok(PASSWORD_UPDATED_SUCCESS );
     }
 }
