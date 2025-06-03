@@ -1,6 +1,6 @@
 package com.example.techchallenge.controller;
 
-import com.example.techchallenge.dto.UpdatePasswrodRequest;
+import com.example.techchallenge.dto.UpdatePasswordRequest;
 import com.example.techchallenge.dto.UserRequest;
 import com.example.techchallenge.dto.UserResponse;
 import com.example.techchallenge.entities.UserEntity;
@@ -75,8 +75,8 @@ public class UserController {
     }
 
     @PostMapping("/update-password")
-    public ResponseEntity<String> updatePassword(@RequestParam Long id, @RequestBody UpdatePasswrodRequest updatePasswrodRequest) {
-        userService.updatePassword(id, updatePasswrodRequest.oldPassword(), updatePasswrodRequest.newPassword());
+    public ResponseEntity<String> updatePassword(@RequestParam Long id, @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        userService.updatePassword(id, updatePasswordRequest.oldPassword(), updatePasswordRequest.newPassword());
         return ResponseEntity.ok(PASSWORD_UPDATED_SUCCESS );
     }
 }

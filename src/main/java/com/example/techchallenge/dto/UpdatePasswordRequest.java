@@ -1,7 +1,7 @@
 package com.example.techchallenge.dto;
 
 
-public record UpdatePasswrodRequest(
+public record UpdatePasswordRequest(
         String oldPassword,
         String newPassword
 ) {
