@@ -1,4 +1,4 @@
-package com.example.techchallenge.Enum;
+package com.example.techchallenge.enums;
 
 public enum UserRoles {
     CLIENTE,

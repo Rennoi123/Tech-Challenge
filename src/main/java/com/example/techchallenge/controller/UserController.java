@@ -1,58 +1,66 @@
 package com.example.techchallenge.controller;
 
-import com.example.techchallenge.Request.UserRequest;
-import com.example.techchallenge.Response.UserResponse;
-import com.example.techchallenge.mapper.ModelMapperBase;
-import com.example.techchallenge.model.UserEntity;
-import com.example.techchallenge.serviceImpl.UserServiceImpl;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import com.example.techchallenge.dto.UserRequest;
+import com.example.techchallenge.dto.UserResponse;
+import com.example.techchallenge.entities.UserEntity;
+import com.example.techchallenge.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserServiceImpl userServiceImpl;
+    private static final String USER_CREATED_SUCCESS = "Usuário criado com sucesso!";
+    private static final String USER_LOGGED_SUCCESS = "Usuário logado com sucesso.";
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
-        UserEntity createdUserEntity = userServiceImpl.createUser(userRequest.toEntity());
-        return ResponseEntity.status(HttpStatus.OK).body(ModelMapperBase.map(createdUserEntity, UserResponse.class));
+    public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest) {
+        userService.createUser(userRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(USER_CREATED_SUCCESS);
     }
 
     @PostMapping("/login")
-     public ResponseEntity<String> loginUser(@RequestBody UserRequest userRequest) {
-        if (userServiceImpl.validateLogin(userRequest.username(), userRequest.password())) {
-            return ResponseEntity.ok("Login successful");
-        } else {
-            return ResponseEntity.status(401).body("Invalid login credentials");
-        }
+    public ResponseEntity<String> loginUser(@RequestBody UserRequest userRequest) {
+        userService.validateLogin(userRequest.email(), userRequest.password());
+        return ResponseEntity.ok(USER_LOGGED_SUCCESS);
     }
 
     @GetMapping
-       public ResponseEntity<Page<UserEntity>> getAllUsers(@RequestParam(value = "page",required = false) Integer page,
-                                                                  @RequestParam(value = "size", required = false) Integer size) {
-        Page<UserEntity> pages = userServiceImpl.getAll(page, size);
-        return ResponseEntity.status(HttpStatus.OK).body(pages);
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        List<UserEntity> users = userService.getAll();
+        List<UserResponse> userResponses = users.stream()
+                .map(userService::toResponse)
+                .toList();
+
+        return ResponseEntity.ok(userResponses);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        UserEntity user = userService.getById(id);
+        UserResponse userResponse = userService.toResponse(user);
+        return ResponseEntity.ok(userResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) {
-        Optional<UserEntity> updatedUserEntity = userServiceImpl.updateUser(userRequest.toEntity());
-        return ResponseEntity.status(HttpStatus.OK).body(ModelMapperBase.map(updatedUserEntity, UserResponse.class));
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+        userRequest = new UserRequest(id, userRequest.name(), userRequest.email(), userRequest.password(), userRequest.address());
+        UserResponse userResponse = userService.updateUser(userRequest);
+        return ResponseEntity.ok(userResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userServiceImpl.delete(id);
+        userService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 }
