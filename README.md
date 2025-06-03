@@ -68,7 +68,7 @@ tech-challenge-backend
 
 5. Acesse a aplicação em `http://localhost:8080`.
 
-6. Acesso nossaS collections do Postman para teste.
+6. Acesse as collections do Postman para teste.
 
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/22747303-00183e48-4730-488a-a651-b28b0f9106a7?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D22747303-00183e48-4730-488a-a651-b28b0f9106a7%26entityType%3Dcollection%26workspaceId%3D492ed606-853d-4a06-87d3-27a14c08eaa8)
 
