@@ -1,5 +1,6 @@
-package com.example.techchallenge.dto;
+package com.example.techchallenge.dto.Request;
 
+import com.example.techchallenge.dto.Request.AddressRequest;
 import com.example.techchallenge.enums.UserRoles;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

@@ -1,9 +1,9 @@
 package com.example.techchallenge.service;
 
-import com.example.techchallenge.dto.AddressResponse;
-import com.example.techchallenge.dto.UserResponse;
+import com.example.techchallenge.dto.Response.AddressResponse;
+import com.example.techchallenge.dto.Response.UserResponse;
 import com.example.techchallenge.enums.UserRoles;
-import com.example.techchallenge.dto.UserRequest;
+import com.example.techchallenge.dto.Request.UserRequest;
 import com.example.techchallenge.exception.UserNotFoundException;
 import com.example.techchallenge.exception.InvalidCredentialsException;
 import com.example.techchallenge.entities.AddressEntity;

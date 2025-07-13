@@ -1,4 +1,4 @@
-package com.example.techchallenge.dto;
+package com.example.techchallenge.dto.Request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
