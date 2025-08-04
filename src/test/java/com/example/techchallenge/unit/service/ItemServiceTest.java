@@ -1,4 +1,4 @@
-package com.example.techchallenge.service;
+package com.example.techchallenge.unit.service;
 
 import com.example.techchallenge.dto.Request.ItemRequest;
 import com.example.techchallenge.dto.Response.ItemResponse;
@@ -6,6 +6,7 @@ import com.example.techchallenge.entities.ItemEntity;
 import com.example.techchallenge.entities.RestaurantEntity;
 import com.example.techchallenge.repository.ItemRepository;
 import com.example.techchallenge.repository.RestaurantRepository;
+import com.example.techchallenge.service.ItemService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,8 +54,8 @@ class ItemServiceTest {
         restaurantEntity.setClosingTime(LocalTime.of(22, 0));
 
         itemRequest = new ItemRequest(
-                "Pizza", "Pizza de Pepperoni", new BigDecimal("50.00"),
-                true, "/images/pizza.jpg", 1L
+        "Pizza", "Pizza de Pepperoni", new BigDecimal("50.00"),
+        true, "/images/pizza.jpg", 1L
         );
 
         itemEntity = new ItemEntity();
@@ -101,8 +102,8 @@ class ItemServiceTest {
     @DisplayName("Deve atualizar um item com sucesso")
     void deveAtualizarItemComSucesso() {
         ItemRequest updateRequest = new ItemRequest(
-                "Pizza Margherita", "Pizza clássica", new BigDecimal("45.00"),
-                false, "/images/margherita.jpg", 1L
+        "Pizza Margherita", "Pizza clássica", new BigDecimal("45.00"),
+        false, "/images/margherita.jpg", 1L
         );
 
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemEntity));
@@ -142,7 +143,7 @@ class ItemServiceTest {
         when(restaurantRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         ItemRequest updateRequestComRestauranteInvalido = new ItemRequest(
-                "Pizza", "Desc", new BigDecimal("10"), true, "path", 99L
+            "Pizza", "Desc", new BigDecimal("10"), true, "path", 99L
         );
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {

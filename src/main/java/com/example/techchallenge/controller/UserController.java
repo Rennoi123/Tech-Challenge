@@ -28,9 +28,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> createUser(@Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
         userService.createUser(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(USER_CREATED_SUCCESS);
+        UserResponse userResponse = new UserResponse(userRequest.id(), userRequest.name(), userRequest.email(), null);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("X-Message", USER_CREATED_SUCCESS)
+                .body(userResponse);
     }
 
     @PostMapping("/register-admin")

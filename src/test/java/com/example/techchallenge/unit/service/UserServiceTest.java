@@ -1,4 +1,4 @@
-package com.example.techchallenge.service;
+package com.example.techchallenge.unit.service;
 
 import com.example.techchallenge.dto.Request.UserRequest;
 import com.example.techchallenge.entities.AddressEntity;
@@ -7,6 +7,8 @@ import com.example.techchallenge.enums.UserRoles;
 import com.example.techchallenge.exception.InvalidCredentialsException;
 import com.example.techchallenge.exception.UserNotFoundException;
 import com.example.techchallenge.repository.UserRepository;
+import com.example.techchallenge.service.AddressService;
+import com.example.techchallenge.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,11 +46,11 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         var addressRequest = new com.example.techchallenge.dto.Request.AddressRequest(
-                null, "Rua Teste", "123", "Apto 1", "Bairro Teste", "Cidade Teste", "ST", "12345678"
+            null, "Rua Teste", "123", "Apto 1", "Bairro Teste", "Cidade Teste", "ST", "12345678"
         );
 
         userRequest = new UserRequest(
-                null, "Test User", "test@example.com", "password123", addressRequest, UserRoles.CLIENTE
+            null, "Test User", "test@example.com", "password123", addressRequest, UserRoles.CLIENTE
         );
 
         addressEntity = new AddressEntity();

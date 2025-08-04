@@ -1,4 +1,4 @@
-package com.example.techchallenge.service;
+package com.example.techchallenge.unit.service;
 
 import com.example.techchallenge.dto.Request.AddressRequest;
 import com.example.techchallenge.dto.Request.RestaurantRequest;
@@ -11,6 +11,8 @@ import com.example.techchallenge.enums.UserRoles;
 import com.example.techchallenge.exception.UserNotFoundException;
 import com.example.techchallenge.repository.RestaurantRepository;
 import com.example.techchallenge.repository.UserRepository;
+import com.example.techchallenge.service.AddressService;
+import com.example.techchallenge.service.RestaurantService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +57,7 @@ class RestaurantServiceTest {
     @BeforeEach
     void setUp() {
         addressRequest = new AddressRequest(
-                null, "Rua do Restaurante", "456", "Loja B", "Centro", "Sao Paulo", "SP", "01000-000"
+            null, "Rua do Restaurante", "456", "Loja B", "Centro", "Sao Paulo", "SP", "01000-000"
         );
         addressEntity = new AddressEntity();
         addressEntity.setId(1L);
@@ -68,7 +70,7 @@ class RestaurantServiceTest {
         addressEntity.setPostalCode("01000-000");
 
         addressResponse = new AddressResponse(
-                1L, "Rua do Restaurante", "456", "Loja B", "Centro", "Sao Paulo", "SP", "01000-000"
+            1L, "Rua do Restaurante", "456", "Loja B", "Centro", "Sao Paulo", "SP", "01000-000"
         );
 
         ownerUserEntity = new UserEntity();
@@ -78,8 +80,8 @@ class RestaurantServiceTest {
         ownerUserEntity.setEmail("owner@example.com");
 
         restaurantRequest = new RestaurantRequest(
-                "Restaurante Teste", addressRequest, "Culinaria Teste",
-                LocalTime.of(9, 0), LocalTime.of(22, 0), 1L
+            "Restaurante Teste", addressRequest, "Culinaria Teste",
+            LocalTime.of(9, 0), LocalTime.of(22, 0), 1L
         );
 
         restaurantEntity = new RestaurantEntity();

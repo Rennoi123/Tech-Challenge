@@ -1,5 +1,6 @@
-package com.example.techchallenge.controller;
+package com.example.techchallenge.unit.controller;
 
+import com.example.techchallenge.controller.ItemController;
 import com.example.techchallenge.dto.Request.ItemRequest;
 import com.example.techchallenge.dto.Response.ItemResponse;
 import com.example.techchallenge.service.ItemService;
@@ -40,12 +41,12 @@ class ItemControllerTest {
     @BeforeEach
     void setUp() {
         itemRequest = new ItemRequest(
-                "Hamburguer", "Delicioso hamburguer artesanal", new BigDecimal("35.00"),
-                false, "...", 1L
+            "Hamburguer", "Delicioso hamburguer artesanal", new BigDecimal("35.00"),
+            false, "...", 1L
         );
         itemResponse = new ItemResponse(
-                1L, "Hamburguer", "Delicioso hamburguer artesanal", new BigDecimal("35.00"),
-                false, "...", 1L
+            1L, "Hamburguer", "Delicioso hamburguer artesanal", new BigDecimal("35.00"),
+            false, "...", 1L
         );
     }
 

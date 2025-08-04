@@ -1,5 +1,6 @@
-package com.example.techchallenge.controller;
+package com.example.techchallenge.unit.controller;
 
+import com.example.techchallenge.controller.UserController;
 import com.example.techchallenge.dto.Request.AddressRequest;
 import com.example.techchallenge.dto.Request.UpdatePasswordRequest;
 import com.example.techchallenge.dto.Request.UserRequest;
@@ -47,14 +48,14 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         AddressRequest addressRequest = new AddressRequest(
-                null, "Rua do Cliente", "789", "Casa", "Vila", "Cidade Ficticia", "SP", "98765-432"
+            null, "Rua do Cliente", "789", "Casa", "Vila", "Cidade Ficticia", "SP", "98765-432"
         );
         AddressResponse addressResponse = new AddressResponse(
-                1L, "Rua do Cliente", "789", "Casa", "Vila", "Cidade Ficticia", "SP", "98765-432"
+            1L, "Rua do Cliente", "789", "Casa", "Vila", "Cidade Ficticia", "SP", "98765-432"
         );
 
         userRequest = new UserRequest(
-                null, "Cliente Teste", "cliente@example.com", "senha123", addressRequest, UserRoles.CLIENTE
+            null, "Cliente Teste", "cliente@example.com", "senha123", addressRequest, UserRoles.CLIENTE
         );
 
         userEntity = new UserEntity();
@@ -65,7 +66,7 @@ class UserControllerTest {
         userEntity.setRoles(UserRoles.CLIENTE);
 
         userResponse = new UserResponse(
-                1L, "Cliente Teste", "cliente@example.com", addressResponse
+            1L, "Cliente Teste", "cliente@example.com", addressResponse
         );
     }
 
@@ -74,11 +75,11 @@ class UserControllerTest {
     void deveCadastrarUsuarioClienteComSucesso() {
         when(userService.createUser(any(UserRequest.class))).thenReturn(userEntity);
 
-        ResponseEntity<String> responseEntity = userController.createUser(userRequest);
+        ResponseEntity<UserResponse> responseEntity = userController.createUser(userRequest);
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        assertEquals("Usuário criado com sucesso!", responseEntity.getBody());
+        assertEquals("Usuário criado com sucesso!", responseEntity.getHeaders().getFirst("X-Message"));
         verify(userService, times(1)).createUser(userRequest);
     }
 
@@ -159,10 +160,10 @@ class UserControllerTest {
     @DisplayName("Deve atualizar o usuário com sucesso")
     void deveAtualizarUsuarioComSucesso() {
         UserRequest updateRequest = new UserRequest(
-                1L, "Updated Name", "updated@example.com", "newpassword", userRequest.address(), null
+            1L, "Updated Name", "updated@example.com", "newpassword", userRequest.address(), null
         );
         UserResponse updatedResponse = new UserResponse(
-                1L, "Updated Name", "updated@example.com", userResponse.address()
+            1L, "Updated Name", "updated@example.com", userResponse.address()
         );
 
         when(userService.updateUser(any(UserRequest.class))).thenReturn(updatedResponse);

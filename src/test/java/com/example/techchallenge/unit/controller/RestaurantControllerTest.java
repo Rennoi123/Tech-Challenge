@@ -1,5 +1,6 @@
-package com.example.techchallenge.controller;
+package com.example.techchallenge.unit.controller;
 
+import com.example.techchallenge.controller.RestaurantController;
 import com.example.techchallenge.dto.Request.AddressRequest;
 import com.example.techchallenge.dto.Request.RestaurantRequest;
 import com.example.techchallenge.dto.Response.AddressResponse;
@@ -45,19 +46,19 @@ class RestaurantControllerTest {
     @BeforeEach
     void setUp() {
         addressRequest = new AddressRequest(
-                null, "Rua do Restaurante", "456", "Loja B", "Centro", "Sao Paulo", "SP", "01000-000"
+            null, "Rua do Restaurante", "456", "Loja B", "Centro", "Sao Paulo", "SP", "01000-000"
         );
         addressResponse = new AddressResponse(
-                1L, "Rua do Restaurante", "456", "Loja B", "Centro", "Sao Paulo", "SP", "01000-000"
+            1L, "Rua do Restaurante", "456", "Loja B", "Centro", "Sao Paulo", "SP", "01000-000"
         );
 
         restaurantRequest = new RestaurantRequest(
-                "Restaurante Teste", addressRequest, "Culinaria Teste",
-                LocalTime.of(9, 0), LocalTime.of(22, 0), 1L
+            "Restaurante Teste", addressRequest, "Culinaria Teste",
+            LocalTime.of(9, 0), LocalTime.of(22, 0), 1L
         );
         restaurantResponse = new RestaurantResponse(
-                1L, "Restaurante Teste", "Culinaria Teste",
-                LocalTime.of(9, 0), LocalTime.of(22, 0), 1L, addressResponse
+            1L, "Restaurante Teste", "Culinaria Teste",
+            LocalTime.of(9, 0), LocalTime.of(22, 0), 1L, addressResponse
         );
     }
 

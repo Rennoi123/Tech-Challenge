@@ -1,8 +1,9 @@
-package com.example.techchallenge.service;
+package com.example.techchallenge.unit.service;
 
 import com.example.techchallenge.dto.Request.AddressRequest;
 import com.example.techchallenge.entities.AddressEntity;
 import com.example.techchallenge.repository.AddressRepository;
+import com.example.techchallenge.service.AddressService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class AddressServiceTest {
     @BeforeEach
     void setUp() {
         requisicaoEndereco = new AddressRequest(
-                1L, "Rua das Flores", "10", "Apto 101", "Jardim", "S�o Paulo", "SP", "01234-567"
+            1L, "Rua das Flores", "10", "Apto 101", "Jardim", "S�o Paulo", "SP", "01234-567"
         );
         entidadeEndereco = new AddressEntity();
         entidadeEndereco.setId(1L);
@@ -54,7 +55,7 @@ class AddressServiceTest {
     @DisplayName("Deve criar um novo endereço se o ID for nulo")
     void deveCriarNovoEnderecoSeIdForNulo() {
         AddressRequest novaRequisicao = new AddressRequest(
-                null, "Rua Nova", "1", null, "Centro", "Rio", "RJ", "20000-000"
+            null, "Rua Nova", "1", null, "Centro", "Rio", "RJ", "20000-000"
         );
         AddressEntity novaEntidade = new AddressEntity();
         novaEntidade.setStreet("Rua Nova");
