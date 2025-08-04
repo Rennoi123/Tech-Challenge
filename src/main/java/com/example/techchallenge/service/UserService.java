@@ -26,15 +26,18 @@ public class UserService {
     private static final String EMPTY_PASSWORD_MESSAGE = "Senha não pode ser vazia.";
     private static final String EMPTY_NAME_MESSAGE = "Nome não pode ser vazio.";
     private static final String EMAIL_ALREADY_EXISTS_MESSAGE = "Email já está em uso.";
+    private static final String USER_CANNOT_BE_DELETED_OWNER_RESTAURANT = "Usuário não pode ser excluído, pois é dono de um restaurante.";
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AddressService addressService;
+    private final RestaurantService restaurantService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AddressService addressService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AddressService addressService,RestaurantService restaurantService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.addressService = addressService;
+        this.restaurantService = restaurantService;
     }
 
     public UserEntity createUser(UserRequest userRequest, String userRoles) {
@@ -66,6 +69,9 @@ public class UserService {
 
     public void delete(Long id) {
         UserEntity entity = getUserById(id);
+        if (restaurantService.getRestaurantByOwnerId(id)) {
+            throw new IllegalArgumentException(USER_CANNOT_BE_DELETED_OWNER_RESTAURANT);
+        }
         userRepository.delete(entity);
     }
 

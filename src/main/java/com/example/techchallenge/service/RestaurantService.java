@@ -11,6 +11,7 @@ import com.example.techchallenge.exception.UserNotFoundException;
 import com.example.techchallenge.repository.RestaurantRepository;
 import com.example.techchallenge.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.el.stream.Optional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +21,10 @@ import java.util.stream.Collectors;
 public class RestaurantService {
 
     private static final String RESTAURANT_NOT_FOUND_MESSAGE_BY_ID = "Restaurante não encontrado pelo id: ";
-
     private static final String VALID_MESSAGE_OWNER_RESTAURANT = "Usuário  sem permissão para criar um Restaurante ";
+    private static final String VALID_MESSAGE_ADDRESS_RESTAURANT = "Endereço já está associado a outro restaurante.";
+    private static final String USER_NOT_FOUND_MESSAGE_BY_ID = String.format("Dono do restaurante não encontrado pelo ID: %d");
+
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
     private final AddressService addressService;
@@ -33,8 +36,14 @@ public class RestaurantService {
     }
 
     public RestaurantResponse createRestaurant(RestaurantRequest request) {
+        int total = restaurantRepository.findRestaurantByAddressId(request.address().id());
+
+        if (total > 0) {
+            throw new IllegalArgumentException(VALID_MESSAGE_ADDRESS_RESTAURANT);
+        }
+
         UserEntity owner = userRepository.findById(request.ownerId())
-                .orElseThrow(() -> new UserNotFoundException("Dono do restaurante não encontrado pelo ID: " + request.ownerId()));
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + request.ownerId()));
 
         if (owner.getRoles() != UserRoles.RESTAURANTE) {
             throw new IllegalArgumentException(VALID_MESSAGE_OWNER_RESTAURANT);
@@ -66,13 +75,17 @@ public class RestaurantService {
         return toResponse(restaurant);
     }
 
+    public boolean getRestaurantByOwnerId(Long id) {
+        int retorno = restaurantRepository.findRestaurantByOwnerId(id);
+        return (retorno > 0);
+    }
+
     public void deleteRestaurant(Long id){
         if (!restaurantRepository.existsById(id)) {
             throw new EntityNotFoundException(RESTAURANT_NOT_FOUND_MESSAGE_BY_ID + id);
         }
         restaurantRepository.deleteById(id);
     }
-
 
     private RestaurantResponse toResponse(RestaurantEntity entity) {
         return new RestaurantResponse(
