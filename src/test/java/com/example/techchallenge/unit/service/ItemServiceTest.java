@@ -195,26 +195,26 @@ class ItemServiceTest {
     @Test
     @DisplayName("Deve deletar um item com sucesso")
     void deveDeletarItemComSucesso() {
-        when(itemRepository.existsById(anyLong())).thenReturn(true);
-        doNothing().when(itemRepository).deleteById(anyLong());
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemEntity));
+        doNothing().when(itemRepository).delete(any(ItemEntity.class));
 
         itemService.deleteItem(1L);
 
-        verify(itemRepository, times(1)).existsById(1L);
-        verify(itemRepository, times(1)).deleteById(1L);
+        verify(itemRepository, times(1)).findById(1L);
+        verify(itemRepository, times(1)).delete(any(ItemEntity.class));
     }
 
     @Test
     @DisplayName("Deve lançar exceção ao tentar deletar item inexistente")
     void deveLancarExcecaoAoTentarDeletarItemInexistente() {
-        when(itemRepository.existsById(anyLong())).thenReturn(false);
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             itemService.deleteItem(99L);
         });
 
         assertEquals("Item não encontrado pelo id: 99", exception.getMessage());
-        verify(itemRepository, times(1)).existsById(99L);
-        verify(itemRepository, never()).deleteById(anyLong());
+        verify(itemRepository, times(1)).findById(99L);
+        verify(itemRepository, never()).delete(any(ItemEntity.class));
     }
 }

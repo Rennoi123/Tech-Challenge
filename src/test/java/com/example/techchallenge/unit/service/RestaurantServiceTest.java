@@ -190,26 +190,27 @@ class RestaurantServiceTest {
     @Test
     @DisplayName("Deve deletar restaurante pelo ID com sucesso")
     void deveDeletarRestaurantePorIdComSucesso() {
-        when(restaurantRepository.existsById(anyLong())).thenReturn(true);
-        doNothing().when(restaurantRepository).deleteById(anyLong());
+        when(restaurantRepository.findById(anyLong())).thenReturn(Optional.of(restaurantEntity));
+
+        doNothing().when(restaurantRepository).delete(any(RestaurantEntity.class));
 
         restaurantService.deleteRestaurant(1L);
 
-        verify(restaurantRepository, times(1)).existsById(1L);
-        verify(restaurantRepository, times(1)).deleteById(1L);
+        verify(restaurantRepository, times(1)).findById(1L);
+        verify(restaurantRepository, times(1)).delete(restaurantEntity);
     }
 
     @Test
     @DisplayName("Deve lançar EntityNotFoundException ao tentar deletar restaurante inexistente")
     void deveLancarEntityNotFoundExceptionAoDeletarRestauranteInexistente() {
-        when(restaurantRepository.existsById(anyLong())).thenReturn(false);
+        when(restaurantRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             restaurantService.deleteRestaurant(99L);
         });
 
         assertEquals("Restaurante não encontrado pelo id: 99", exception.getMessage());
-        verify(restaurantRepository, times(1)).existsById(99L);
+        verify(restaurantRepository, times(1)).findById(99L);
         verify(restaurantRepository, never()).deleteById(anyLong());
     }
 }
