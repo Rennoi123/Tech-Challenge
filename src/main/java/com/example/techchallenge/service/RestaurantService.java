@@ -13,6 +13,7 @@ import com.example.techchallenge.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.el.stream.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,11 +81,11 @@ public class RestaurantService {
         return (retorno > 0);
     }
 
-    public void deleteRestaurant(Long id){
-        if (!restaurantRepository.existsById(id)) {
-            throw new EntityNotFoundException(RESTAURANT_NOT_FOUND_MESSAGE_BY_ID + id);
-        }
-        restaurantRepository.deleteById(id);
+    public void deleteRestaurant(Long id) {
+        RestaurantEntity restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(RESTAURANT_NOT_FOUND_MESSAGE_BY_ID + id));
+
+        restaurantRepository.delete(restaurant);
     }
 
     private RestaurantResponse toResponse(RestaurantEntity entity) {

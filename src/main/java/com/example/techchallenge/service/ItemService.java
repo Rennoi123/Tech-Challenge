@@ -74,11 +74,11 @@ public class ItemService {
     }
 
     @Transactional
-    public void deleteItem(Long id){
-        if (!itemRepository.existsById(id)) {
-            throw new EntityNotFoundException(ITEM_NOT_FOUND_MESSAGE_BY_ID + id);
-        }
-        itemRepository.deleteById(id);
+    public void deleteItem(Long id) {
+        ItemEntity item = itemRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ITEM_NOT_FOUND_MESSAGE_BY_ID + id));
+
+        itemRepository.delete(item);
     }
 
     private ItemResponse toResponse(ItemEntity entity) {
