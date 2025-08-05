@@ -20,7 +20,11 @@ public class TestUtils {
     }
 
     public int criarUsuarioParaTeste() {
-        String email = "user_" + System.currentTimeMillis() + "@test.com";
+        return criarUsuarioParaTeste(null);
+    }
+
+    public int criarUsuarioParaTeste(String email) {
+        email = (email != null && !email.isEmpty()) ? email : "user_" + System.currentTimeMillis() + "@test.com";
 
         String payload = """
             {

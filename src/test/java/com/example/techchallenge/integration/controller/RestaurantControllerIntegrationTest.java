@@ -1,21 +1,31 @@
 package com.example.techchallenge.integration.controller;
 
+import com.example.techchallenge.TechChallengeApplication;
 import com.example.techchallenge.integration.util.TestUtils;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = TechChallengeApplication.class)
+@ActiveProfiles("test")
+@Transactional
 class RestaurantControllerIntegrationTest {
+
+    @LocalServerPort
+    private int port;
 
     private int idRestaurante = 0;
 
@@ -25,10 +35,14 @@ class RestaurantControllerIntegrationTest {
     @BeforeAll
     static void setup() {
         RestAssured.baseURI = "http://localhost";
-        RestAssured.port = 8080;
         RestAssured.basePath = "/api/restaurants";
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    }
+
+    @BeforeEach
+    void beforeEachTest() {
+        RestAssured.port = port;
     }
 
     @Test
@@ -37,12 +51,12 @@ class RestaurantControllerIntegrationTest {
         idRestaurante = getIdRestaurante();
 
         given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get()
-                .then()
-                .statusCode(200)
-                .body("$", not(empty()));
+            .contentType(ContentType.JSON)
+        .when()
+            .get()
+        .then()
+            .statusCode(200)
+            .body("$", not(empty()));
     }
 
     @Test
@@ -51,13 +65,13 @@ class RestaurantControllerIntegrationTest {
         String payload = testUtils.createRestaurantPayload();
 
         given()
-                .contentType(ContentType.JSON)
-                .body(payload)
-                .when()
-                .post()
-                .then()
-                .statusCode(201)
-                .body("name", equalTo("Restaurante Teste"));
+            .contentType(ContentType.JSON)
+            .body(payload)
+        .when()
+            .post()
+        .then()
+            .statusCode(201)
+            .body("name", equalTo("Restaurante Teste"));
     }
 
     @Test
@@ -66,13 +80,13 @@ class RestaurantControllerIntegrationTest {
         idRestaurante = getIdRestaurante();
 
         given()
-                .pathParam("id", idRestaurante)
-                .when()
-                .get("/{id}")
-                .then()
-                .statusCode(200)
-                .body("id", equalTo(idRestaurante))
-                .body("name", equalTo("Restaurante Teste"));
+            .pathParam("id", idRestaurante)
+        .when()
+            .get("/{id}")
+        .then()
+            .statusCode(200)
+            .body("id", equalTo(idRestaurante))
+            .body("name", equalTo("Restaurante Teste"));
     }
 
     @Test
@@ -81,11 +95,11 @@ class RestaurantControllerIntegrationTest {
         idRestaurante = getIdRestaurante();
 
         given()
-                .contentType(ContentType.JSON)
-                .when()
-                .delete("/{id}", idRestaurante)
-                .then()
-                .statusCode(204);
+            .contentType(ContentType.JSON)
+        .when()
+            .delete("/{id}", idRestaurante)
+        .then()
+            .statusCode(204);
     }
 
     private int getIdRestaurante() {

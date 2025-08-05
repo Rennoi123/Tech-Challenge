@@ -75,11 +75,11 @@ class UserControllerTest {
     void deveCadastrarUsuarioClienteComSucesso() {
         when(userService.createUser(any(UserRequest.class))).thenReturn(userEntity);
 
-        ResponseEntity<UserResponse> responseEntity = userController.createUser(userRequest);
+        ResponseEntity<String> responseEntity = userController.createUser(userRequest);
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        assertEquals("Usuário criado com sucesso!", responseEntity.getHeaders().getFirst("X-Message"));
+        assertEquals("Usuário criado com sucesso!", responseEntity.getBody());
         verify(userService, times(1)).createUser(userRequest);
     }
 

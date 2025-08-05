@@ -1,20 +1,31 @@
 package com.example.techchallenge.integration.controller;
 
+import com.example.techchallenge.TechChallengeApplication;
 import com.example.techchallenge.integration.util.TestUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = TechChallengeApplication.class)
+@ActiveProfiles("test")
+@Transactional
 class UserControllerIntegrationTest {
+
+    @LocalServerPort
+    private int port;
 
     private int idUsuario = 0;
 
@@ -24,10 +35,14 @@ class UserControllerIntegrationTest {
     @BeforeAll
     static void setUp() {
         RestAssured.baseURI = "http://localhost";
-        RestAssured.port = 8080;
         RestAssured.basePath = "/api/users";
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    }
+
+    @BeforeEach
+    void beforeEachTest() {
+        RestAssured.port = port;
     }
 
     @Test
@@ -82,9 +97,11 @@ class UserControllerIntegrationTest {
     @Test
     @DisplayName("Deve validar login com sucesso")
     void deveValidarLoginComSucesso() {
+        testUtils.criarUsuarioParaTeste("user_login@test.com");
+
         String payload = """
             {
-              "email": "user_1754175006607@test.com",
+              "email": "user_login@test.com",
               "password": "senha123"
             }
         """;

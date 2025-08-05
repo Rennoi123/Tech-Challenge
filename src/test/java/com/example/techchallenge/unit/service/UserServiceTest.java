@@ -8,6 +8,7 @@ import com.example.techchallenge.exception.InvalidCredentialsException;
 import com.example.techchallenge.exception.UserNotFoundException;
 import com.example.techchallenge.repository.UserRepository;
 import com.example.techchallenge.service.AddressService;
+import com.example.techchallenge.service.RestaurantService;
 import com.example.techchallenge.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +36,8 @@ class UserServiceTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private AddressService addressService;
+    @Mock
+    private RestaurantService restaurantService;
 
     @InjectMocks
     private UserService userService;
@@ -187,11 +190,17 @@ class UserServiceTest {
     @Test
     @DisplayName("Deve excluir um usuário com sucesso")
     void deveExcluirUsuarioComSucesso() {
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(userEntity));
-        doNothing().when(userRepository).delete(any(UserEntity.class));
+        Long userId = 1L;
 
-        userService.delete(1L);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userEntity));
+        when(restaurantService.getRestaurantByOwnerId(userId)).thenReturn(false);
 
+        doNothing().when(userRepository).delete(userEntity);
+
+        userService.delete(userId);
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(restaurantService, times(1)).getRestaurantByOwnerId(userId);
         verify(userRepository, times(1)).delete(userEntity);
     }
 
