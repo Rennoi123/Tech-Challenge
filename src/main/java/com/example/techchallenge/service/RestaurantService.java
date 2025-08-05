@@ -23,7 +23,7 @@ public class RestaurantService {
     private static final String RESTAURANT_NOT_FOUND_MESSAGE_BY_ID = "Restaurante não encontrado pelo id: ";
     private static final String VALID_MESSAGE_OWNER_RESTAURANT = "Usuário  sem permissão para criar um Restaurante ";
     private static final String VALID_MESSAGE_ADDRESS_RESTAURANT = "Endereço já está associado a outro restaurante.";
-    private static final String USER_NOT_FOUND_MESSAGE_BY_ID = String.format("Dono do restaurante não encontrado pelo ID: %d");
+    private static final String USER_NOT_FOUND_MESSAGE_BY_ID = "Dono do restaurante não encontrado pelo ID: ";
 
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
@@ -36,7 +36,7 @@ public class RestaurantService {
     }
 
     public RestaurantResponse createRestaurant(RestaurantRequest request) {
-        int total = restaurantRepository.findRestaurantByAddressId(request.address().id());
+        int total = restaurantRepository.countByAddressId(request.address().id());
 
         if (total > 0) {
             throw new IllegalArgumentException(VALID_MESSAGE_ADDRESS_RESTAURANT);
@@ -76,7 +76,7 @@ public class RestaurantService {
     }
 
     public boolean getRestaurantByOwnerId(Long id) {
-        int retorno = restaurantRepository.findRestaurantByOwnerId(id);
+        int retorno = restaurantRepository.countByOwnerId(id);
         return (retorno > 0);
     }
 
