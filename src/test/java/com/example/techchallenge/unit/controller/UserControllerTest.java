@@ -66,7 +66,7 @@ class UserControllerTest {
         userEntity.setRoles(UserRoles.CLIENTE);
 
         userResponse = new UserResponse(
-            1L, "Cliente Teste", "cliente@example.com", addressResponse
+            1L, "Cliente Teste", "cliente@example.com", addressResponse, UserRoles.CLIENTE
         );
     }
 
@@ -163,7 +163,7 @@ class UserControllerTest {
             1L, "Updated Name", "updated@example.com", "newpassword", userRequest.address(), null
         );
         UserResponse updatedResponse = new UserResponse(
-            1L, "Updated Name", "updated@example.com", userResponse.address()
+            1L, "Updated Name", "updated@example.com", userResponse.address(), UserRoles.CLIENTE
         );
 
         when(userService.updateUser(any(UserRequest.class))).thenReturn(updatedResponse);

@@ -146,7 +146,8 @@ public class UserService {
             user.getId(),
             user.getName(),
             user.getEmail(),
-            addressResponse
+            addressResponse,
+            user.getRoles()
         );
     }
 
