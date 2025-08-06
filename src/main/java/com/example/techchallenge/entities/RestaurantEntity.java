@@ -16,7 +16,7 @@ public class RestaurantEntity {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
