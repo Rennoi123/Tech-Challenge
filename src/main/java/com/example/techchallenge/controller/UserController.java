@@ -1,11 +1,12 @@
 package com.example.techchallenge.controller;
 
-import com.example.techchallenge.dto.UpdatePasswordRequest;
-import com.example.techchallenge.dto.UserRequest;
-import com.example.techchallenge.dto.UserResponse;
+import com.example.techchallenge.dto.Request.UpdatePasswordRequest;
+import com.example.techchallenge.dto.Request.UserRequest;
+import com.example.techchallenge.dto.Response.UserResponse;
 import com.example.techchallenge.entities.UserEntity;
 import com.example.techchallenge.enums.UserRoles;
 import com.example.techchallenge.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +28,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserRequest userRequest) {
         userService.createUser(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(USER_CREATED_SUCCESS);
     }
 
     @PostMapping("/register-admin")
-    public ResponseEntity<String> createUserAdmin(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<String> createUserAdmin(@Valid @RequestBody UserRequest userRequest) {
         userService.createUser(userRequest, UserRoles.RESTAURANTE.toString());
         return ResponseEntity.status(HttpStatus.CREATED).body(USER_CREATED_SUCCESS);
     }

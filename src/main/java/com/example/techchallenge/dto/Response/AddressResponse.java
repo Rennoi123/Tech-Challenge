@@ -1,4 +1,4 @@
-package com.example.techchallenge.dto;
+package com.example.techchallenge.dto.Response;
 
 public record AddressResponse(
         Long id,

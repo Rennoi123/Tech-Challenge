@@ -8,7 +8,7 @@ RUN mvn dependency:go-offline
 
 COPY . .
 
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
 FROM eclipse-temurin:17-jdk
 ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8787"

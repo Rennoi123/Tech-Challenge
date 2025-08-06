@@ -1,7 +1,6 @@
 package com.example.techchallenge.service;
 
-import com.example.techchallenge.dto.AddressRequest;
-import com.example.techchallenge.dto.UserRequest;
+import com.example.techchallenge.dto.Request.AddressRequest;
 import com.example.techchallenge.entities.AddressEntity;
 import com.example.techchallenge.repository.AddressRepository;
 import org.springframework.http.HttpStatus;
