@@ -75,13 +75,13 @@ class RestaurantServiceTest {
 
         ownerUserEntity = new UserEntity();
         ownerUserEntity.setId(1L);
-        ownerUserEntity.setRoles(UserRoles.RESTAURANTE);
+        ownerUserEntity.setRoles(UserRoles.ADMIN);
         ownerUserEntity.setName("Owner Name");
         ownerUserEntity.setEmail("owner@example.com");
 
         restaurantRequest = new RestaurantRequest(
             "Restaurante Teste", addressRequest, "Culinaria Teste",
-            LocalTime.of(9, 0), LocalTime.of(22, 0), 1L
+            LocalTime.of(9, 0), LocalTime.of(22, 0)
         );
 
         restaurantEntity = new RestaurantEntity();
@@ -106,12 +106,10 @@ class RestaurantServiceTest {
         assertNotNull(response);
         assertEquals(restaurantRequest.name(), response.name());
         assertEquals(restaurantRequest.cuisineType(), response.cuisineType());
-        assertEquals(restaurantRequest.ownerId(), response.ownerId());
         assertEquals(restaurantRequest.openingTime(), response.openingTime());
         assertEquals(restaurantRequest.closingTime(), response.closingTime());
         assertEquals(addressResponse, response.address());
 
-        verify(userRepository, times(1)).findById(restaurantRequest.ownerId());
         verify(addressService, times(1)).createOrUpdateAddress(restaurantRequest.address());
         verify(restaurantRepository, times(1)).save(any(RestaurantEntity.class));
     }
@@ -125,8 +123,7 @@ class RestaurantServiceTest {
             restaurantService.createRestaurant(restaurantRequest);
         });
 
-        assertEquals("Dono do restaurante não encontrado pelo ID: " + restaurantRequest.ownerId(), exception.getMessage());
-        verify(userRepository, times(1)).findById(restaurantRequest.ownerId());
+
         verify(addressService, never()).createOrUpdateAddress(any());
         verify(restaurantRepository, never()).save(any());
     }
@@ -142,7 +139,6 @@ class RestaurantServiceTest {
         });
 
         assertEquals("Usuário  sem permissão para criar um Restaurante ", exception.getMessage());
-        verify(userRepository, times(1)).findById(restaurantRequest.ownerId());
         verify(addressService, never()).createOrUpdateAddress(any());
         verify(restaurantRepository, never()).save(any());
     }

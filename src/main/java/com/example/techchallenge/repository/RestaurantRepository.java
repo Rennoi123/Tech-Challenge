@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface RestaurantRepository extends JpaRepository<RestaurantEntity, Long> {
     Optional<RestaurantEntity> findById(int id);
 
-    int countByOwnerId(Long ownerId);
-
     int countByAddressId(Long addressId);
+
+    boolean existsByAddressId(Long addressId);
 }

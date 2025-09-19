@@ -18,8 +18,6 @@ public record RestaurantRequest(
         LocalTime openingTime,
 
         @NotNull(message = "Horário de funcionamento: é obrigatório")
-        LocalTime closingTime,
+        LocalTime closingTime
 
-        @NotNull(message = "ID do dono do restaurante: é obrigatório")
-        Long ownerId //TODO- Pegar do usuario logado.
 ) {}

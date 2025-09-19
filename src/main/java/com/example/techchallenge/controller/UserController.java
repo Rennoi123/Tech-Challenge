@@ -35,14 +35,14 @@ public class UserController {
 
     @PostMapping("/register-admin")
     public ResponseEntity<String> createUserAdmin(@Valid @RequestBody UserRequest userRequest) {
-        userService.createUser(userRequest, UserRoles.RESTAURANTE.toString());
+        userService.createUser(userRequest, UserRoles.ADMIN.toString());
         return ResponseEntity.status(HttpStatus.CREATED).body(USER_CREATED_SUCCESS);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody UserRequest userRequest) {
-        userService.validateLogin(userRequest.email(), userRequest.password());
-        return ResponseEntity.ok(USER_LOGGED_SUCCESS);
+        String token = userService.loginAndGetToken(userRequest.email(), userRequest.password());
+        return ResponseEntity.ok(token);
     }
 
     @GetMapping

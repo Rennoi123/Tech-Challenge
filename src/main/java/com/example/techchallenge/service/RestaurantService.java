@@ -11,9 +11,8 @@ import com.example.techchallenge.exception.UserNotFoundException;
 import com.example.techchallenge.repository.RestaurantRepository;
 import com.example.techchallenge.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.el.stream.Optional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +24,7 @@ public class RestaurantService {
     private static final String VALID_MESSAGE_OWNER_RESTAURANT = "Usuário  sem permissão para criar um Restaurante ";
     private static final String VALID_MESSAGE_ADDRESS_RESTAURANT = "Endereço já está associado a outro restaurante.";
     private static final String USER_NOT_FOUND_MESSAGE_BY_ID = "Dono do restaurante não encontrado pelo ID: ";
+    public static final String USER_NOT_FOUND_MESSAGE_BY_EMAIL = "Usuário não encontrado com o email: ";
 
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
@@ -37,16 +37,17 @@ public class RestaurantService {
     }
 
     public RestaurantResponse createRestaurant(RestaurantRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE_BY_EMAIL + email));
+
         int total = restaurantRepository.countByAddressId(request.address().id());
 
         if (total > 0) {
             throw new IllegalArgumentException(VALID_MESSAGE_ADDRESS_RESTAURANT);
         }
 
-        UserEntity owner = userRepository.findById(request.ownerId())
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + request.ownerId()));
-
-        if (owner.getRoles() != UserRoles.RESTAURANTE) {
+        if (!user.getRoles().equals(UserRoles.ADMIN)) {
             throw new IllegalArgumentException(VALID_MESSAGE_OWNER_RESTAURANT);
         }
 
@@ -58,7 +59,7 @@ public class RestaurantService {
         restaurant.setCuisineType(request.cuisineType());
         restaurant.setOpeningTime(request.openingTime());
         restaurant.setClosingTime(request.closingTime());
-        restaurant.setOwner(owner);
+        restaurant.setOwner(user);
 
         RestaurantEntity savedRestaurant = restaurantRepository.save(restaurant);
         return toResponse(savedRestaurant);
@@ -76,10 +77,6 @@ public class RestaurantService {
         return toResponse(restaurant);
     }
 
-    public boolean getRestaurantByOwnerId(Long id) {
-        int retorno = restaurantRepository.countByOwnerId(id);
-        return (retorno > 0);
-    }
 
     public void deleteRestaurant(Long id) {
         RestaurantEntity restaurant = restaurantRepository.findById(id)
@@ -95,7 +92,7 @@ public class RestaurantService {
                 entity.getCuisineType(),
                 entity.getOpeningTime(),
                 entity.getClosingTime(),
-                entity.getOwner().getId(),
+
                 new AddressResponse(
                         entity.getAddress().getId(),
                         entity.getAddress().getStreet(),

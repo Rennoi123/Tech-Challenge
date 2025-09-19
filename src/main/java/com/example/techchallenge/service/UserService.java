@@ -9,6 +9,7 @@ import com.example.techchallenge.exception.InvalidCredentialsException;
 import com.example.techchallenge.entities.AddressEntity;
 import com.example.techchallenge.entities.UserEntity;
 import com.example.techchallenge.repository.UserRepository;
+import com.example.techchallenge.security.JwtTokenProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +32,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AddressService addressService;
-    private final RestaurantService restaurantService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AddressService addressService,RestaurantService restaurantService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AddressService addressService, RestaurantService restaurantService, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.addressService = addressService;
-        this.restaurantService = restaurantService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public UserEntity createUser(UserRequest userRequest, String userRoles) {
@@ -50,7 +51,7 @@ public class UserService {
         UserEntity newUser = buildUserFromRequest(userRequest);
 
         if(userRoles != null){
-            newUser.setRoles(UserRoles.RESTAURANTE);
+            newUser.setRoles(UserRoles.ADMIN);
         }
         return userRepository.save(newUser);
     }
@@ -69,9 +70,7 @@ public class UserService {
 
     public void delete(Long id) {
         UserEntity entity = getUserById(id);
-        if (restaurantService.getRestaurantByOwnerId(id)) {
-            throw new IllegalArgumentException(USER_CANNOT_BE_DELETED_OWNER_RESTAURANT);
-        }
+
         userRepository.delete(entity);
     }
 
@@ -84,6 +83,17 @@ public class UserService {
         }
 
         return true;
+    }
+
+    public String loginAndGetToken(String email, String password) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new InvalidCredentialsException(EMAIL_NOT_FOUND_MESSAGE));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new InvalidCredentialsException(INVALID_PASSWORD_MESSAGE);
+        }
+
+        return jwtTokenProvider.generateToken(user);
     }
 
     public UserEntity getById(Long id) {

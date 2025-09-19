@@ -8,6 +8,5 @@ public record RestaurantResponse(
         String cuisineType,
         LocalTime openingTime,
         LocalTime closingTime,
-        Long ownerId,
         AddressResponse address
         ) {}

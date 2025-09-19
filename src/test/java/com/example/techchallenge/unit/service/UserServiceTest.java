@@ -193,14 +193,12 @@ class UserServiceTest {
         Long userId = 1L;
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(userEntity));
-        when(restaurantService.getRestaurantByOwnerId(userId)).thenReturn(false);
 
         doNothing().when(userRepository).delete(userEntity);
 
         userService.delete(userId);
 
         verify(userRepository, times(1)).findById(userId);
-        verify(restaurantService, times(1)).getRestaurantByOwnerId(userId);
         verify(userRepository, times(1)).delete(userEntity);
     }
 
