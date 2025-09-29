@@ -27,7 +27,7 @@ public class UserEntity  {
 
     private Date lastModifiedDate;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 

@@ -15,11 +15,11 @@ public class Address {
     private Long id;
     private String street;
     private String number;
+    private String complement;
     private String neighborhood;
     private String city;
     private String state;
     private String postalCode;
-    private String complement;
 
     public void validate() {
         validateField(street, STREET_REQUIRED);
