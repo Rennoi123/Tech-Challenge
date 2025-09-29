@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private static final String INVALID_CREDENTIALS = "Credenciais inválidas.";
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid UserDTO userRequest) {
+    public ResponseEntity<String> login(@RequestBody UserDTO userRequest) {
         try {
             User user = authenticateUserUseCase.execute(userRequest.email(), userRequest.password());
             String token = jwtTokenProvider.generateToken(UserEntity.fromDomain(user));
