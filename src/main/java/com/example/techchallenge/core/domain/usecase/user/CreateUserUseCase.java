@@ -22,7 +22,7 @@ public class CreateUserUseCase {
     }
 
     public User execute(User user) {
-        return execute(user, UserRoles.CLIENTE.name());
+        return execute(user, null);
     }
 
     public User execute(User user, String role) {
