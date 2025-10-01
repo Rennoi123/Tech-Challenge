@@ -54,11 +54,11 @@ class RestaurantControllerTest {
 
         restaurantRequest = new RestaurantRequest(
             "Restaurante Teste", addressRequest, "Culinaria Teste",
-            LocalTime.of(9, 0), LocalTime.of(22, 0), 1L
+            LocalTime.of(9, 0), LocalTime.of(22, 0)
         );
         restaurantResponse = new RestaurantResponse(
             1L, "Restaurante Teste", "Culinaria Teste",
-            LocalTime.of(9, 0), LocalTime.of(22, 0), 1L, addressResponse
+            LocalTime.of(9, 0), LocalTime.of(22, 0), addressResponse
         );
     }
 
@@ -165,7 +165,7 @@ class RestaurantControllerTest {
         UserNotFoundException excecao = assertThrows(UserNotFoundException.class, () -> {
             restaurantController.createRestaurant(new RestaurantRequest(
                     "Restaurante Teste", addressRequest, "Culinaria Teste",
-                    LocalTime.of(9, 0), LocalTime.of(22, 0), 99L
+                    LocalTime.of(9, 0), LocalTime.of(22, 0)
             ));
         });
 

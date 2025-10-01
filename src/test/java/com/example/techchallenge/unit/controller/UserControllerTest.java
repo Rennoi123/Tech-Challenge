@@ -93,7 +93,7 @@ class UserControllerTest {
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals("Usuário criado com sucesso!", responseEntity.getBody());
-        verify(userService, times(1)).createUser(userRequest, UserRoles.RESTAURANTE.toString());
+        verify(userService, times(1)).createUser(userRequest, UserRoles.ADMIN.toString());
     }
 
     @Test
