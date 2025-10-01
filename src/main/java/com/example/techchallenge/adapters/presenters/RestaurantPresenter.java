@@ -44,11 +44,11 @@ public class RestaurantPresenter {
                 dto.address().id(),
                 dto.address().street(),
                 dto.address().number(),
+                dto.address().complement(),
                 dto.address().neighborhood(),
                 dto.address().city(),
                 dto.address().state(),
-                dto.address().postalCode(),
-                dto.address().complement()
+                dto.address().postalCode()
         );
 
         return new Restaurant(

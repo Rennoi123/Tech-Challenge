@@ -83,8 +83,8 @@ public class UserController {
         );
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO dto) {
+    @PutMapping
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO dto) {
         User saved = updateUserUseCase.execute(UserPresenter.fromDTO(dto));
         return ResponseEntity.ok(UserPresenter.toDTO(saved));
     }

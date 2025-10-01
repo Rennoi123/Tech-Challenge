@@ -9,7 +9,7 @@ public class UserPresenter {
             user.getId(),
             user.getName(),
             user.getEmail(),
-            user.getPassword(),
+            "",
             AddressPresenter.toDTO(user.getAddress()),
             user.getRole()
         );
