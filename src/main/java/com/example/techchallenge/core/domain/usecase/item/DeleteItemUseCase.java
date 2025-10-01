@@ -15,7 +15,7 @@ public class DeleteItemUseCase {
     }
 
     public void execute(Long id) {
-        if (itemGateway.existsById(id)) {
+        if (!itemGateway.existsById(id)) {
             throw new EntityNotFoundException(ITEM_NOT_FOUND_MESSAGE_BY_ID + id);
         }
 
