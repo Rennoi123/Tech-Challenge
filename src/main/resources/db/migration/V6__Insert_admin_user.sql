@@ -1,0 +1,2 @@
+INSERT INTO TB_USERS (name, email, password, roles, created_date, last_modified_date, address_id)
+VALUES ('Admin', 'admin@example.com', '$2a$10$tqs3qCxLd9k3.8jOV4qpBeD4ueV7wLevEEg58zdclLOSKHsCAfT76', 'ADMIN', NOW(), NOW(), 999);
