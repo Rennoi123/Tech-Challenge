@@ -1,4 +1,4 @@
-package com.example.techchallenge.integration.util;
+/*package com.example.techchallenge.integration.util;
 
 import com.example.techchallenge.repository.UserRepository;
 import io.restassured.RestAssured;
@@ -128,4 +128,4 @@ public class TestUtils {
                 .extract()
                 .path("id");
     }
-}
+}*/

@@ -71,4 +71,12 @@ public class ItemGatewayAdapter implements IItemGateway {
                 .map(ItemEntity::toDomain)
                 .toList();
     }
+
+    @Override
+    public List<Item> findAvailableItems() {
+        return itemRepository.findByAvailableTrue()
+                .stream()
+                .map(ItemEntity::toDomain)
+                .toList();
+    }
 }

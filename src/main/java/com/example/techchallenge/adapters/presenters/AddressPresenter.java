@@ -11,11 +11,11 @@ public class AddressPresenter {
                 address.getId(),
                 address.getStreet(),
                 address.getNumber(),
+                address.getComplement(),
                 address.getNeighborhood(),
                 address.getCity(),
                 address.getState(),
-                address.getPostalCode(),
-                address.getComplement()
+                address.getPostalCode()
         );
     }
 
@@ -24,11 +24,11 @@ public class AddressPresenter {
                 address.getId(),
                 address.getStreet(),
                 address.getNumber(),
+                address.getComplement(),
                 address.getNeighborhood(),
                 address.getCity(),
                 address.getState(),
-                address.getPostalCode(),
-                address.getComplement()
+                address.getPostalCode()
         );
     }
 
