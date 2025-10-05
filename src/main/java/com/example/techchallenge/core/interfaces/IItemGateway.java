@@ -13,4 +13,5 @@ public interface IItemGateway {
     boolean existsById(Long id);
     List<Item> findByRestaurantId(Long restaurantId);
     List<Item> findByNameContaining(String name);
+    List<Item> findAvailableItems();
 }

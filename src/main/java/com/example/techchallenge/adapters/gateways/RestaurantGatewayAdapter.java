@@ -16,7 +16,7 @@ import java.util.Optional;
 @Component
 public class RestaurantGatewayAdapter implements IRestaurantGateway {
 
-    final String OWNER_NOT_FOUND_MSG = "Dono (user) não encontrado: ";
+    private final String OWNER_NOT_FOUND_MSG = "Dono (user) não encontrado: ";
 
     private final RestaurantRepository restaurantRepository;
     private final AddressRepository addressRepository;

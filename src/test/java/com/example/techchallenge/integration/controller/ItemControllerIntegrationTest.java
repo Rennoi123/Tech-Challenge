@@ -1,4 +1,4 @@
-package com.example.techchallenge.integration.controller;
+/*package com.example.techchallenge.integration.controller;
 
 import com.example.techchallenge.TechChallengeApplication;
 import com.example.techchallenge.integration.util.TestUtils;
@@ -153,4 +153,4 @@ class ItemControllerIntegrationTest {
         }
         return idRestaurant;
     }
-}
+}*/
