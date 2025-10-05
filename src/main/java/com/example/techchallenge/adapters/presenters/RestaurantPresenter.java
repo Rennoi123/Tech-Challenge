@@ -23,7 +23,8 @@ public class RestaurantPresenter {
                 ),
                 restaurant.getCuisineType(),
                 restaurant.getOpeningTime(),
-                restaurant.getClosingTime()
+                restaurant.getClosingTime(),
+                restaurant.getQtdtable()
         );
     }
 
@@ -34,7 +35,9 @@ public class RestaurantPresenter {
                 restaurant.getCuisineType(),
                 restaurant.getOpeningTime(),
                 restaurant.getClosingTime(),
-                toDTO(restaurant).address()
+                toDTO(restaurant).address(),
+                restaurant.getCapacity(),
+                restaurant.getQtdtable()
 
         );
     }
@@ -57,7 +60,9 @@ public class RestaurantPresenter {
                 address,
                 dto.cuisineType(),
                 dto.openingTime(),
-                dto.closingTime()
-        );
+                dto.closingTime(),
+                dto.qtdTable() * 2,
+                dto.qtdTable()
+                );
     }
 }

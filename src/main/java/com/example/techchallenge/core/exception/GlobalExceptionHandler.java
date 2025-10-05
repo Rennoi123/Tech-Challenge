@@ -50,4 +50,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno: " + ex.getMessage());
     }
+
+    @ExceptionHandler(ReservationNotFoundException.class)
+    public ResponseEntity<Object> handleReservationNotFoundException(ReservationNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

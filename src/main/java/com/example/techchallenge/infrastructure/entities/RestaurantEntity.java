@@ -2,6 +2,7 @@ package com.example.techchallenge.infrastructure.entities;
 
 import com.example.techchallenge.core.domain.entities.Restaurant;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import java.time.LocalTime;
 
@@ -34,6 +35,14 @@ public class RestaurantEntity {
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private UserEntity owner;
 
+    @Positive
+    @Column(nullable = false)
+    private Integer capacity;
+
+    @Positive
+    @Column(nullable = false)
+    private Integer qtdTable;
+
     public static RestaurantEntity fromDomain(Restaurant restaurant) {
         RestaurantEntity entity = new RestaurantEntity();
         entity.id = restaurant.getId();
@@ -42,6 +51,8 @@ public class RestaurantEntity {
         entity.cuisineType = restaurant.getCuisineType();
         entity.openingTime = restaurant.getOpeningTime();
         entity.closingTime = restaurant.getClosingTime();
+        entity.capacity = restaurant.getCapacity();
+        entity.qtdTable = restaurant.getQtdtable();
         return entity;
     }
 
@@ -54,6 +65,8 @@ public class RestaurantEntity {
         e.openingTime = r.getOpeningTime();
         e.closingTime = r.getClosingTime();
         e.owner = ownerEntity;
+        e.capacity = r.getCapacity();
+        e.qtdTable = r.getQtdtable();
         return e;
     }
 
@@ -65,7 +78,9 @@ public class RestaurantEntity {
                 cuisineType,
                 openingTime,
                 closingTime,
-                owner != null ? owner.getId() : null
+                owner != null ? owner.getId() : null,
+                capacity,
+                qtdTable
         );
     }
 

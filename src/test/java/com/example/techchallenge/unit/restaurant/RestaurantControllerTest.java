@@ -52,9 +52,9 @@ class RestaurantControllerTest {
     @Test
     void deveCriarRestauranteComSucesso() {
         Restaurant domain = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10, 0), LocalTime.of(22, 0), user.getId());
+                LocalTime.of(10, 0), LocalTime.of(22, 0), user.getId(),100,200);
         RestaurantDTO dto = new RestaurantDTO("Restaurante A", addressDTO, "Italiana",
-                LocalTime.of(10, 0), LocalTime.of(22, 0));
+                LocalTime.of(10, 0), LocalTime.of(22, 0),100);
 
         when(createRestaurantUseCase.execute(any(Restaurant.class))).thenReturn(domain);
 
@@ -69,10 +69,10 @@ class RestaurantControllerTest {
     @Test
     void deveFalharAoCriarRestaurante() {
         RestaurantDTO dto = new RestaurantDTO("Restaurante A", addressDTO, "Italiana",
-                LocalTime.of(10, 0), LocalTime.of(22, 0));
+                LocalTime.of(10, 0), LocalTime.of(22, 0),100);
 
         Restaurant domain = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10, 0), LocalTime.of(22, 0), user.getId());
+                LocalTime.of(10, 0), LocalTime.of(22, 0), user.getId(),100,200);
 
         when(createRestaurantUseCase.execute(domain)).thenThrow(new RuntimeException("Erro"));
 
