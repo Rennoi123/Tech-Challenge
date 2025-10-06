@@ -18,6 +18,9 @@ public record RestaurantDTO(
         LocalTime openingTime,
 
         @NotNull(message = "Horário de funcionamento: é obrigatório")
-        LocalTime closingTime
+        LocalTime closingTime,
+
+        @NotNull(message = "Quantidade de mesa: é obrigatório")
+        Integer qtdTable
 
 ) {}

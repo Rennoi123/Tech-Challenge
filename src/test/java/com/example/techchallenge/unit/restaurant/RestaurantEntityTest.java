@@ -25,7 +25,7 @@ class RestaurantEntityTest {
     @Test
     void deveConverterDeDomainParaEntity() {
         Restaurant domain = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10, 0), LocalTime.of(22, 0), null);
+                LocalTime.of(10, 0), LocalTime.of(22, 0), null,100);
 
         RestaurantEntity entity = RestaurantEntity.fromDomain(domain);
 

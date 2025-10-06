@@ -47,6 +47,7 @@ public class CreateRestaurantUseCase {
         }
 
         Address address = addressGateway.save(restaurant.getAddress());
+        Integer capacity = restaurant.getQtdtable() * 2;
 
         Restaurant newRestaurant = new Restaurant(
                 null,
@@ -55,7 +56,9 @@ public class CreateRestaurantUseCase {
                 restaurant.getCuisineType(),
                 restaurant.getOpeningTime(),
                 restaurant.getClosingTime(),
-                user.getId()
+                user.getId(),
+                capacity,
+                restaurant.getQtdtable()
         );
 
         return restaurantGateway.save(newRestaurant);

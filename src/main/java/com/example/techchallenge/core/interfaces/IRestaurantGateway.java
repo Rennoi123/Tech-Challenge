@@ -12,4 +12,5 @@ public interface IRestaurantGateway {
     void deleteById(Long id);
     boolean existsById(Long id);
     long countByAddressId(Long addressId);
+    List<Restaurant> findByOwnerId(Long userId);
 }
