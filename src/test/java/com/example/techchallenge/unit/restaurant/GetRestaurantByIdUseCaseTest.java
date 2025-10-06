@@ -39,7 +39,7 @@ class GetRestaurantByIdUseCaseTest {
     @Test
     void deveRetornarRestauranteQuandoEncontrado() {
         Restaurant restaurant = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10,0), LocalTime.of(22,0), 1L);
+                LocalTime.of(10,0), LocalTime.of(22,0), 1L,100,200);
 
         when(gateway.findById(1L)).thenReturn(Optional.of(restaurant));
 

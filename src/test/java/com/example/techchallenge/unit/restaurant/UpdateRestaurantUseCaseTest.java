@@ -41,10 +41,10 @@ class UpdateRestaurantUseCaseTest {
     @Test
     void deveAtualizarRestauranteComSucesso() {
         Restaurant existing = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10,0), LocalTime.of(22,0), 1L);
+                LocalTime.of(10,0), LocalTime.of(22,0), 1L,100,200);
 
         Restaurant updated = new Restaurant(1L, "Restaurante B", address, "Japonesa",
-                LocalTime.of(9,0), LocalTime.of(23,0), 1L);
+                LocalTime.of(9,0), LocalTime.of(23,0), 1L,100,200);
 
         when(gateway.findById(1L)).thenReturn(Optional.of(existing));
         when(gateway.save(any())).thenReturn(updated);
@@ -62,7 +62,7 @@ class UpdateRestaurantUseCaseTest {
         when(gateway.findById(1L)).thenReturn(Optional.empty());
 
         Restaurant updated = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10,0), LocalTime.of(22,0), 1L);
+                LocalTime.of(10,0), LocalTime.of(22,0), 1L,100,200);
 
         assertThrows(EntityNotFoundException.class, () -> useCase.execute(updated));
     }

@@ -18,7 +18,7 @@ public class User {
     private Date createdDate;
     private Date lastModifiedDate;
     private UserRoles role;
-    private Address address; // referência adicionada
+    private Address address;
 
     public User() {
         this.createdDate = new Date();

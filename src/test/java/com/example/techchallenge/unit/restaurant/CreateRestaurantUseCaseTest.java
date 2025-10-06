@@ -56,10 +56,10 @@ class CreateRestaurantUseCaseTest {
     @Test
     void deveCriarRestauranteComSucesso() {
         Restaurant novo = new Restaurant(null, "Restaurante A", address, "Italiana",
-                LocalTime.of(10,0), LocalTime.of(22,0), user.getId());
+                LocalTime.of(10,0), LocalTime.of(22,0), user.getId(),100,200);
 
         Restaurant salvo = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10,0), LocalTime.of(22,0), user.getId());
+                LocalTime.of(10,0), LocalTime.of(22,0), user.getId(),100,200);
 
         when(securityGateway.getAuthenticatedEmail()).thenReturn(user.getEmail());
         when(userGateway.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -80,7 +80,7 @@ class CreateRestaurantUseCaseTest {
     @Test
     void deveFalharSeGatewayLancarExcecao() {
         Restaurant novo = new Restaurant(null, "Restaurante X", address, "Japonesa",
-                LocalTime.of(11,0), LocalTime.of(20,0), null);
+                LocalTime.of(11,0), LocalTime.of(20,0), null,100,200);
 
         when(securityGateway.getAuthenticatedEmail()).thenReturn("naoexiste@email.com");
         when(userGateway.findByEmail("naoexiste@email.com")).thenReturn(Optional.empty());

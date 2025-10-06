@@ -12,5 +12,4 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
     List<ItemEntity> findByRestaurantId(Long restaurantId);
     List<ItemEntity> findByNameContainingIgnoreCase(String name);
     List<ItemEntity> findByDineInOnlyFalse();
-    List<ItemEntity> findByAvailableTrue();
 }

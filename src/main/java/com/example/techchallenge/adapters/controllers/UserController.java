@@ -6,6 +6,8 @@ import com.example.techchallenge.core.dto.UpdatePasswordDTO;
 import com.example.techchallenge.core.enums.UserRoles;
 import com.example.techchallenge.core.exception.InvalidCredentialsException;
 import com.example.techchallenge.infrastructure.entities.UserEntity;
+import com.example.techchallenge.infrastructure.security.JwtAuthenticationEntryPoint;
+import com.example.techchallenge.infrastructure.security.JwtRequestFilter;
 import com.example.techchallenge.infrastructure.security.JwtTokenProvider;
 import com.example.techchallenge.core.dto.UserDTO;
 import com.example.techchallenge.adapters.presenters.UserPresenter;
@@ -31,10 +33,11 @@ public class UserController {
     private final UpdatePasswordUseCase updatePasswordUseCase;
     private final AuthenticateUserUseCase authenticateUserUseCase;
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtRequestFilter jwtRequestFilter;
 
     public UserController(CreateUserUseCase createUserUseCase, GetUserUseCase getUserUseCase, ListUsersUseCase listUsersUseCase,
                           UpdateUserUseCase updateUserUseCase, DeleteUserUseCase deleteUserUseCase, UpdatePasswordUseCase updatePasswordUseCase,
-                          AuthenticateUserUseCase authenticateUserUseCase, JwtTokenProvider jwtTokenProvider) {
+                          AuthenticateUserUseCase authenticateUserUseCase, JwtTokenProvider jwtTokenProvider, JwtRequestFilter jwtRequestFilter) {
         this.createUserUseCase = createUserUseCase;
         this.getUserUseCase = getUserUseCase;
         this.listUsersUseCase = listUsersUseCase;
@@ -43,6 +46,7 @@ public class UserController {
         this.updatePasswordUseCase = updatePasswordUseCase;
         this.authenticateUserUseCase = authenticateUserUseCase;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     @PostMapping("/login")

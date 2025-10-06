@@ -60,7 +60,7 @@ class RestaurantGatewayAdapterTest {
     @Test
     void deveSalvarRestaurante() {
         Restaurant restaurante = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10, 0), LocalTime.of(22, 0), user.getId());
+                LocalTime.of(10, 0), LocalTime.of(22, 0), user.getId(),100,200);
 
         AddressEntity addressEntity = AddressEntity.fromDomain(address);
         UserEntity userEntity = UserEntity.fromDomain(user);
@@ -84,7 +84,7 @@ class RestaurantGatewayAdapterTest {
     @Test
     void deveBuscarRestaurantePorId() {
         Restaurant domain = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10, 0), LocalTime.of(22, 0), user.getId());
+                LocalTime.of(10, 0), LocalTime.of(22, 0), user.getId(),100,200);
         RestaurantEntity entity = RestaurantEntity.fromDomain(domain);
         entity.setId(1L);
 
@@ -108,7 +108,7 @@ class RestaurantGatewayAdapterTest {
     @Test
     void deveListarRestaurantes() {
         Restaurant domain = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10, 0), LocalTime.of(22, 0), user.getId());
+                LocalTime.of(10, 0), LocalTime.of(22, 0), user.getId(),100,200);
         RestaurantEntity entity = RestaurantEntity.fromDomain(domain);
         entity.setId(1L);
 
