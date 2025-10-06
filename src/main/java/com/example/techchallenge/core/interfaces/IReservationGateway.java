@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IReservationGateway {
-    List<Reservation> findAll();
     Reservation createReservation(Reservation reservation);
-    List<Reservation> findByRestaurantId(Long restaurantId);
     Optional<Reservation> findById(Long id);
     List<Reservation> findByRestaurantIdAndReservationTime(Long restaurantId, LocalDateTime reservationTime);
     Reservation updateReservationStatus(Reservation reservation);
+    List<Reservation> findByRestaurantId(Long restaurantId);
+    List<Reservation> findByRestaurantIdIn(List<Long> restaurantIds);
 }

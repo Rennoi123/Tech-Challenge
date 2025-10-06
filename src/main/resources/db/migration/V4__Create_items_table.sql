@@ -6,6 +6,6 @@ CREATE TABLE TB_ITEMS (
     dine_in_only BOOLEAN NOT NULL,
     photo_path VARCHAR(255),
     restaurant_id INT NOT NULL,
-    available BOOLEAN NOT NULL DEFAULT,
+    available BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (restaurant_id) REFERENCES RESTAURANT(id)
 );

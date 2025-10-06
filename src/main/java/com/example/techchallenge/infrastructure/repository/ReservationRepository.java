@@ -11,5 +11,7 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Long> {
 
     List<ReservationEntity> findByRestaurantIdAndReservationTime(Long restaurantId, LocalDateTime reservationTime);
+    List<ReservationEntity> findAllByRestaurantId(Long restaurantId);
 
+    List<ReservationEntity> findByRestaurantIdIn(List<Long> restaurantIds);
 }

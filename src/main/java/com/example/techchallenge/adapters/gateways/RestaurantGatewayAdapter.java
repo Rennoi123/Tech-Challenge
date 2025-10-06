@@ -74,4 +74,9 @@ public class RestaurantGatewayAdapter implements IRestaurantGateway {
     public long countByAddressId(Long addressId) {
         return restaurantRepository.countByAddressId(addressId);
     }
+
+    @Override
+    public List<Restaurant> findByOwnerId(Long userId) {
+        return restaurantRepository.findByOwnerId(userId).stream().map(RestaurantEntity::toDomain).toList();
+    }
 }

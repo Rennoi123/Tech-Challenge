@@ -1,6 +1,7 @@
 package com.example.techchallenge.infrastructure.entities;
 
 import com.example.techchallenge.core.domain.entities.Reservation;
+import com.example.techchallenge.core.domain.entities.User;
 import com.example.techchallenge.core.enums.ReservationStatusEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
@@ -46,11 +47,11 @@ public class ReservationEntity {
 
     private LocalDateTime updatedAt;
 
-    public static ReservationEntity fromDomain(Reservation reservation, RestaurantEntity restaurantEntity, UserEntity userEntity) {
+    public static ReservationEntity fromDomain(Reservation reservation, RestaurantEntity restaurantEntity, User userEntity) {
         ReservationEntity entity = new ReservationEntity();
         entity.id = reservation.getId();
         entity.restaurant = restaurantEntity;
-        entity.user = userEntity;
+        entity.user = UserEntity.fromDomain(userEntity);
         entity.reservationTime = reservation.getReservationTime();
         entity.numberOfPeople = reservation.getNumberOfPeople();
         entity.status = reservation.getStatus();

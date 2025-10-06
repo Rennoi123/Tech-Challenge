@@ -3,7 +3,7 @@ package com.example.techchallenge.adapters.controllers;
 import com.example.techchallenge.adapters.presenters.ReservationPresenter;
 import com.example.techchallenge.core.domain.entities.Reservation;
 import com.example.techchallenge.core.domain.usecase.reservation.CreateReservationUseCase;
-import com.example.techchallenge.core.domain.usecase.reservation.ListReservationsUseCase;
+import com.example.techchallenge.core.domain.usecase.reservation.ListReservationsByRestaurantOwnerUseCase;
 import com.example.techchallenge.core.domain.usecase.reservation.UpdateReservationStatusUseCase;
 import com.example.techchallenge.core.dto.ReservationDTO;
 import com.example.techchallenge.core.dto.ReservationResponse;
@@ -29,18 +29,17 @@ import java.util.stream.Collectors;
 public class ReservationController {
 
     private final CreateReservationUseCase createReservationUseCase;
-    private final ListReservationsUseCase listReservationsUseCase;
     private final UpdateReservationStatusUseCase updateReservationStatusUseCase;
-
+    private final ListReservationsByRestaurantOwnerUseCase listReservationsByRestaurantOwnerUseCase;
 
 
 
     public ReservationController(CreateReservationUseCase createReservationUseCase,
-                                 ListReservationsUseCase listReservationsUseCase,
-                                 UpdateReservationStatusUseCase updateReservationStatusUseCase) {
+                                 UpdateReservationStatusUseCase updateReservationStatusUseCase,
+                                 ListReservationsByRestaurantOwnerUseCase listReservationsByRestaurantOwnerUseCase) {
         this.createReservationUseCase = createReservationUseCase;
-        this.listReservationsUseCase = listReservationsUseCase;
         this.updateReservationStatusUseCase = updateReservationStatusUseCase;
+        this.listReservationsByRestaurantOwnerUseCase = listReservationsByRestaurantOwnerUseCase;
     }
 
     @PostMapping
@@ -52,7 +51,7 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> listAll() {
-        List<Reservation> reservations = listReservationsUseCase.execute();
+        List<Reservation> reservations = listReservationsByRestaurantOwnerUseCase.execute();
         List<ReservationResponse> response = reservations.stream()
                 .map(ReservationPresenter::toResponse)
                 .collect(Collectors.toList());
