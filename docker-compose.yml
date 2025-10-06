@@ -11,8 +11,23 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/tech_challenge_db
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: 123456
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+      SPRING_RABBITMQ_PUBLISHER_CONFIRM_TYPE: CORRELATED
+      SPRING_RABBITMQ_PUBLISHER_RETURNS: "true"
+      SPRING_RABBITMQ_TEMPLATE_MANDATORY: "true"
+
+      # Configurações do listener (ajuste conforme necessário)
+      # SPRING_RABBITMQ_LISTENER_SIMPLE_PREFETCH: 10
+      # SPRING_RABBITMQ_LISTENER_SIMPLE_CONCURRENCY: 1
+      # SPRING_RABBITMQ_LISTENER_SIMPLE_MAX_CONCURRENCY: 4
     depends_on:
       - db
+      - rabbitmq
 
   db:
     volumes:
@@ -36,6 +51,16 @@ services:
       POSTGRES_PASSWORD: 123456
     ports:
       - "5433:5432"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: tech-challenge-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
 
 volumes:
   db_test_data:

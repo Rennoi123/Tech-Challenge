@@ -35,7 +35,6 @@ public class RestaurantPresenter {
                 restaurant.getOpeningTime(),
                 restaurant.getClosingTime(),
                 toDTO(restaurant).address()
-
         );
     }
 

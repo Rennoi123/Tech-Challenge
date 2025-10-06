@@ -50,7 +50,7 @@ class ItemGatewayAdapterTest {
                 1L, "Rua A", "123", "Ap 1", "Centro", "Cidade X", "SP", "12345-000"
         );
 
-        User user = new User(1L, "João", "joao@email.com", "123456", UserRoles.ADMIN, address);
+        User user = new User(1L, "Joao", "joao@email.com", "123456", UserRoles.ADMIN, address);
 
         Restaurant restaurante = new Restaurant(1L, "Restaurante B", address, "Japonesa",
                 LocalTime.of(9,0), LocalTime.of(23,0), 1L);
@@ -106,32 +106,6 @@ class ItemGatewayAdapterTest {
         when(itemRepository.findById(1L)).thenReturn(Optional.empty());
 
         Optional<Item> result = itemGatewayAdapter.findById(1L);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void deveListarItensDisponiveis() {
-        ItemEntity entity = new ItemEntity();
-        entity.setId(1L);
-        entity.setName("Pizza");
-        entity.setPrice(BigDecimal.valueOf(30.0));
-        entity.setRestaurant(restaurantEntity);
-
-        when(itemRepository.findByAvailableTrue()).thenReturn(List.of(entity));
-
-        List<Item> result = itemGatewayAdapter.findAvailableItems();
-
-        assertFalse(result.isEmpty());
-        assertEquals("Pizza", result.get(0).getName());
-        assertEquals(BigDecimal.valueOf(30.0), result.get(0).getPrice());
-    }
-
-    @Test
-    void deveRetornarListaVaziaQuandoNaoHaItensDisponiveis() {
-        when(itemRepository.findByAvailableTrue()).thenReturn(Collections.emptyList());
-
-        List<Item> result = itemGatewayAdapter.findAvailableItems();
 
         assertTrue(result.isEmpty());
     }

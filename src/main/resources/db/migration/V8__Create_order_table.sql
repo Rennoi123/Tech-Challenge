@@ -1,0 +1,14 @@
+CREATE TABLE TB_ORDER (
+    id SERIAL PRIMARY KEY,
+    restaurant_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    delivery_order BOOLEAN NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    status VARCHAR(50) NOT NULL,
+
+    FOREIGN KEY (restaurant_id) REFERENCES RESTAURANT(id),
+    FOREIGN KEY (user_id) REFERENCES TB_USERS(id),
+    CHECK (status IN ('PENDENTE', 'EM_PREPARO', 'CANCELADO', 'FINALIZADO'))
+);
