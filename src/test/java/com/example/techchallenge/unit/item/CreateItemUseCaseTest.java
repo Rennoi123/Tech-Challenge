@@ -42,7 +42,7 @@ class CreateItemUseCaseTest {
         ItemDTO dto = new ItemDTO("Pizza", "Massa fina", BigDecimal.valueOf(30),
                 false, "/img/pizza.png", 1L);
         Restaurant restaurant = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(9,0), LocalTime.of(23,0), 1L);
+                LocalTime.of(9,0), LocalTime.of(23,0), 1L,100,200);
 
         when(restaurantGateway.findById(1L)).thenReturn(Optional.of(restaurant));
         when(itemGateway.save(any())).thenReturn(new Item(1L, "Pizza", "Massa fina", BigDecimal.valueOf(30), false, "/img/pizza.png", 1L));

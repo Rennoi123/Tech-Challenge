@@ -43,7 +43,7 @@ class UpdateItemUseCaseTest {
         ItemDTO dto = new ItemDTO("Pizza Atualizada", "Massa grossa", BigDecimal.valueOf(35),
                 true, "/img/pizza2.png", 1L);
         Restaurant restaurant = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(9,0), LocalTime.of(23,0), 1L);
+                LocalTime.of(9,0), LocalTime.of(23,0), 1L,100, 200);
 
         when(itemGateway.findById(1L)).thenReturn(Optional.of(existing));
         when(restaurantGateway.findById(1L)).thenReturn(Optional.of(restaurant));
