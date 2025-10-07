@@ -2,6 +2,8 @@ package com.example.techchallenge.integration.controller;
 
 import com.example.techchallenge.TechChallengeApplication;
 import io.restassured.RestAssured;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import io.restassured.response.ValidatableResponse;
@@ -32,6 +34,8 @@ public class UserControllerIntegrationTest {
     void setup() {
         RestAssured.port = port;
         RestAssured.defaultParser = Parser.JSON;
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
         String loginPayload = """
             {

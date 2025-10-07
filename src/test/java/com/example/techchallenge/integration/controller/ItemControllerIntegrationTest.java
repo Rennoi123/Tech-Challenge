@@ -2,6 +2,8 @@ package com.example.techchallenge.integration.controller;
 
 import com.example.techchallenge.TechChallengeApplication;
 import io.restassured.RestAssured;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import io.restassured.response.ValidatableResponse;
@@ -32,6 +34,8 @@ public class ItemControllerIntegrationTest {
     void setup() {
         RestAssured.port = port;
         RestAssured.defaultParser = Parser.JSON;
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
         String loginPayload = """
             {
@@ -53,24 +57,25 @@ public class ItemControllerIntegrationTest {
 
         String restaurantPayload = """
             {
-              "name": "Restaurante Teste",
-              "address": {
-                "street": "Rua das Flores",
-                "number": "123",
-                "complement": "Apto 10",
-                "neighborhood": "Centro",
-                "city": "São Paulo",
-                "state": "SP",
-                "postalCode": "01234567"
-              },
-              "cuisineType": "Italiana",
-              "openingTime": "10:00:00",
-              "closingTime": "22:00:00",
-              "ownerId": 1
+                "name": "Restaurante dos Itens",
+                "address": {
+                    "street": "Rua das Comidas",
+                    "number": "200",
+                    "complement": "Loja 3",
+                    "neighborhood": "Centro",
+                    "city": "Uberlândia",
+                    "state": "MG",
+                    "postalCode": "38400000"
+                },
+                "cuisineType": "Mineira",
+                "openingTime": "09:00:00",
+                "closingTime": "22:00:00",
+                "capacity": 50,
+                "qtdTable": 15
             }
         """;
 
-        createdRestaurantId = RestAssured
+        ValidatableResponse restaurantResponse = RestAssured
                 .given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
@@ -79,8 +84,10 @@ public class ItemControllerIntegrationTest {
                 .post("/api/restaurants")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .extract()
-                .path("id");
+                .body("id", notNullValue());
+
+        createdRestaurantId = Long.valueOf(restaurantResponse.extract().path("id").toString());
+        Assertions.assertNotNull(createdRestaurantId, "O ID do restaurante deve ser criado antes dos testes de item.");
     }
 
     @Test
@@ -88,11 +95,11 @@ public class ItemControllerIntegrationTest {
     void deveCriarItem() {
         String payload = """
             {
-              "name": "Pizza Margherita",
-              "description": "Pizza clássica com molho de tomate, mussarela e manjericão.",
-              "price": 45.50,
-              "available": true,
-              "restaurantId": %d
+                "name": "Prato Executivo",
+                "description": "Arroz, feijão, bife e batata frita",
+                "price": 29.90,
+                "available": true,
+                "restaurantId": %d
             }
         """.formatted(createdRestaurantId);
 
@@ -106,8 +113,8 @@ public class ItemControllerIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("id", notNullValue())
-                .body("name", equalTo("Pizza Margherita"))
-                .body("available", equalTo(true));
+                .body("name", equalTo("Prato Executivo"))
+                .body("price", equalTo(29.90F));
 
         createdItemId = Long.valueOf(response.extract().path("id").toString());
         Assertions.assertNotNull(createdItemId, "O ID do item criado não deve ser nulo");
@@ -123,7 +130,8 @@ public class ItemControllerIntegrationTest {
                 .get("/api/items")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", greaterThanOrEqualTo(1));
+                .body("size()", greaterThanOrEqualTo(1))
+                .body("[0].name", notNullValue());
     }
 
     @Test
@@ -140,7 +148,8 @@ public class ItemControllerIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("id", equalTo(createdItemId.intValue()))
-                .body("name", equalTo("Pizza Margherita"));
+                .body("name", equalTo("Prato Executivo"))
+                .body("price", equalTo(29.90F));
     }
 
     @Test
@@ -150,11 +159,11 @@ public class ItemControllerIntegrationTest {
 
         String updatePayload = """
             {
-              "name": "Pizza Quatro Queijos",
-              "description": "Pizza com quatro tipos de queijo.",
-              "price": 52.00,
-              "available": true,
-              "restaurantId": %d
+                "name": "Prato Atualizado",
+                "description": "Arroz, feijão, frango grelhado e salada",
+                "price": 34.50,
+                "available": true,
+                "restaurantId": %d
             }
         """.formatted(createdRestaurantId);
 
@@ -168,8 +177,8 @@ public class ItemControllerIntegrationTest {
                 .put("/api/items/{id}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("name", equalTo("Pizza Quatro Queijos"))
-                .body("price", equalTo(52.00F));
+                .body("name", equalTo("Prato Atualizado"))
+                .body("price", equalTo(34.50F));
     }
 
     @Test
@@ -189,7 +198,7 @@ public class ItemControllerIntegrationTest {
 
     @Test
     @Order(6)
-    void deveRetornar404ItemInexistente() {
+    void deveRetornar404ParaItemInexistente() {
         RestAssured
                 .given()
                 .header("Authorization", "Bearer " + token)
@@ -198,5 +207,28 @@ public class ItemControllerIntegrationTest {
                 .get("/api/items/{id}")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    @Order(7)
+    void deveRetornar401AoCriarSemToken() {
+        String payload = """
+            {
+                "name": "Item Sem Token",
+                "description": "Item inválido",
+                "price": 19.90,
+                "available": true,
+                "restaurantId": %d
+            }
+        """.formatted(createdRestaurantId);
+
+        RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(payload)
+                .when()
+                .post("/api/items")
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 }

@@ -1,6 +1,7 @@
 package com.example.techchallenge.adapters.gateways;
 
 import com.example.techchallenge.core.domain.entities.Restaurant;
+import com.example.techchallenge.core.domain.entities.User;
 import com.example.techchallenge.core.interfaces.IRestaurantGateway;
 import com.example.techchallenge.infrastructure.entities.AddressEntity;
 import com.example.techchallenge.infrastructure.entities.RestaurantEntity;
@@ -16,22 +17,16 @@ import java.util.Optional;
 @Component
 public class RestaurantGatewayAdapter implements IRestaurantGateway {
 
-    private final String OWNER_NOT_FOUND_MSG = "Dono (user) não encontrado: ";
-
     private final RestaurantRepository restaurantRepository;
     private final AddressRepository addressRepository;
-    private final UserRepository userRepository;
 
-    public RestaurantGatewayAdapter(RestaurantRepository restaurantRepository,
-                                    AddressRepository addressRepository,
-                                    UserRepository userRepository) {
+    public RestaurantGatewayAdapter(RestaurantRepository restaurantRepository, AddressRepository addressRepository) {
         this.restaurantRepository = restaurantRepository;
         this.addressRepository = addressRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
-    public Restaurant save(Restaurant restaurant) {
+    public Restaurant save(Restaurant restaurant, User user) {
         AddressEntity addressEntity = null;
 
         if (restaurant.getAddress() != null) {
@@ -43,8 +38,7 @@ public class RestaurantGatewayAdapter implements IRestaurantGateway {
             }
         }
 
-        UserEntity ownerEntity = userRepository.findById(restaurant.getOwnerId())
-                .orElseThrow(() -> new IllegalArgumentException(OWNER_NOT_FOUND_MSG + restaurant.getOwnerId()));
+        UserEntity ownerEntity =  UserEntity.fromDomain(user);
 
         RestaurantEntity toPersist = RestaurantEntity.fromDomain(restaurant, addressEntity, ownerEntity);
         return restaurantRepository.save(toPersist).toDomain();

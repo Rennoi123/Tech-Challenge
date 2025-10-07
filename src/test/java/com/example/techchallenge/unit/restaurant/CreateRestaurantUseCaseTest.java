@@ -64,7 +64,7 @@ class CreateRestaurantUseCaseTest {
         when(securityGateway.getAuthenticatedEmail()).thenReturn(user.getEmail());
         when(userGateway.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(addressGateway.save(any(Address.class))).thenReturn(address);
-        when(restaurantGateway.save(any(Restaurant.class))).thenReturn(salvo);
+        when(restaurantGateway.save(any(Restaurant.class), any(User.class))).thenReturn(salvo);
 
         Restaurant result = useCase.execute(novo);
 
@@ -74,7 +74,7 @@ class CreateRestaurantUseCaseTest {
         verify(securityGateway, times(1)).getAuthenticatedEmail();
         verify(userGateway, times(1)).findByEmail(user.getEmail());
         verify(addressGateway, times(1)).save(any(Address.class));
-        verify(restaurantGateway, times(1)).save(any(Restaurant.class));
+        verify(restaurantGateway, times(1)).save(any(Restaurant.class), any(User.class));
     }
 
     @Test
@@ -88,6 +88,6 @@ class CreateRestaurantUseCaseTest {
         assertThrows(UserNotFoundException.class, () -> useCase.execute(novo));
 
         verify(addressGateway, never()).save(any(Address.class));
-        verify(restaurantGateway, never()).save(any(Restaurant.class));
+        verify(restaurantGateway, never()).save(any(Restaurant.class), any(User.class));
     }
 }

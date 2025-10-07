@@ -11,6 +11,7 @@ import com.example.techchallenge.core.interfaces.IAddressGateway;
 import com.example.techchallenge.core.interfaces.IRestaurantGateway;
 import com.example.techchallenge.core.interfaces.ISecurityGateway;
 import com.example.techchallenge.core.interfaces.IUserGateway;
+import com.example.techchallenge.infrastructure.security.SecurityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -44,7 +45,11 @@ public class RestaurantUseCaseConfig {
 
 
     @Bean
-    public UpdateRestaurantUseCase updateRestaurantUseCase(IRestaurantGateway restaurantGateway) {
-        return new UpdateRestaurantUseCase(restaurantGateway);
+    public UpdateRestaurantUseCase updateRestaurantUseCase(
+            IRestaurantGateway restaurantGateway,
+            ISecurityGateway securityGateway,
+            IUserGateway userGateway,
+            SecurityUtils securityUtils) {
+        return new UpdateRestaurantUseCase(restaurantGateway, securityGateway, userGateway, securityUtils);
     }
 }
