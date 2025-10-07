@@ -118,6 +118,11 @@
             <artifactId>flyway-core</artifactId>
             <version>9.22.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-java-extended-scalars</artifactId>
+            <version>20.2</version>
+        </dependency>
     </dependencies>
 
     <repositories>
