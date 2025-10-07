@@ -2,10 +2,12 @@ package com.example.techchallenge.core.domain.entities;
 
 import com.example.techchallenge.core.enums.ReservationStatusEnum;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 public class Reservation {
 
     private static final String RESTAURANT_ID_REQUIRED = "Restaurante é obrigatório";

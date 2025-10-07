@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/reservations").hasAuthority(UserRoles.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, "/api/reservations/status/**").hasAuthority(UserRoles.ADMIN.name())
                         .requestMatchers("/api/orders/**").authenticated()
-                        .requestMatchers("/graphql", "/graphiql").permitAll()
+                        .requestMatchers("/graphql", "/graphiql", "/graphiql/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
