@@ -49,7 +49,7 @@ class RestaurantGatewayAdapterTest {
 
     @BeforeEach
     void setUp() {
-        gatewayAdapter = new RestaurantGatewayAdapter(restaurantRepository, addressRepository, userRepository);
+        gatewayAdapter = new RestaurantGatewayAdapter(restaurantRepository, addressRepository);
 
         address = new Address(1L, "Rua A", "123", "Ap 1",
                 "Centro", "Cidade X", "SP", "12345-000");
@@ -67,17 +67,15 @@ class RestaurantGatewayAdapterTest {
         RestaurantEntity restauranteEntity = RestaurantEntity.fromDomain(restaurante, addressEntity, userEntity);
 
         when(addressRepository.findById(address.getId())).thenReturn(Optional.of(addressEntity));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
         when(restaurantRepository.save(any(RestaurantEntity.class))).thenReturn(restauranteEntity);
 
-        Restaurant salvo = gatewayAdapter.save(restaurante);
+        Restaurant salvo = gatewayAdapter.save(restaurante, user);
 
         assertNotNull(salvo.getId());
         assertEquals("Restaurante A", salvo.getName());
         assertEquals("Italiana", salvo.getCuisineType());
 
         verify(addressRepository, times(1)).findById(address.getId());
-        verify(userRepository, times(1)).findById(1L);
         verify(restaurantRepository, times(1)).save(any(RestaurantEntity.class));
     }
 

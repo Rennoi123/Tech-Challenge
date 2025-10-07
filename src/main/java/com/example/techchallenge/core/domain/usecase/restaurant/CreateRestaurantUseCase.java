@@ -61,6 +61,6 @@ public class CreateRestaurantUseCase {
                 restaurant.getQtdtable()
         );
 
-        return restaurantGateway.save(newRestaurant);
+        return restaurantGateway.save(newRestaurant, user);
     }
 }
