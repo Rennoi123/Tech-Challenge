@@ -1,10 +1,12 @@
 package com.example.techchallenge.core.domain.entities;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalTime;
 
 @Data
+@Builder
 public class Restaurant {
     private static final String NOME_OBRIGATORIO = "Nome é obrigatório";
     private static final String ENDERECO_OBRIGATORIO = "Endereço é obrigatório";

@@ -1,12 +1,13 @@
 package com.example.techchallenge.core.interfaces;
 
 import com.example.techchallenge.core.domain.entities.Restaurant;
+import com.example.techchallenge.core.domain.entities.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IRestaurantGateway {
-    Restaurant save(Restaurant restaurant);
+    Restaurant save(Restaurant restaurant, User user);
     Optional<Restaurant> findById(Long id);
     List<Restaurant> findAll();
     void deleteById(Long id);
