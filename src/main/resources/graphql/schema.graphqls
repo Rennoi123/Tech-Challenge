@@ -1,0 +1,176 @@
+scalar DateTime
+scalar Long
+
+enum OrderStatus {
+  PENDING
+  PREPARING
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+type Address {
+  street: String!
+  city: String!
+  state: String!
+  zipCode: String!
+  number: String
+  complement: String
+}
+
+type User {
+  id: ID
+  name: String!
+  email: String!
+  roles: [String!]!
+  createdAt: DateTime
+  address: Address
+}
+
+type Restaurant {
+  id: ID
+  name: String!
+  cuisineType: String
+  ownerId: Long
+  openingTime: String
+  closingTime: String
+  address: Address
+}
+
+type Item {
+  id: ID
+  name: String!
+  description: String
+  price: Float!
+  restaurantId: Long!
+}
+
+type Reservation {
+  id: ID
+  userId: Long!
+  restaurantId: Long!
+  tableNumber: Int
+  numberOfPeople: Int
+  start: DateTime!
+  end: DateTime!
+  status: ReservationStatus!
+  createdAt: DateTime
+}
+
+type ItemOrder {
+  itemId: Long!
+  quantity: Int!
+}
+
+type Order {
+  id: ID
+  restaurantId: Long!
+  userId: Long!
+  status: OrderStatus!
+  itemOrders: [ItemOrder!]!
+  createdAt: DateTime
+}
+
+input AddressInput {
+  street: String!
+  city: String!
+  state: String!
+  zipCode: String!
+  number: String
+  complement: String
+}
+
+input RestaurantInput {
+  name: String!
+  cuisineType: String
+  ownerId: Long
+  openingTime: String!
+  closingTime: String!
+  address: AddressInput!
+}
+
+input ItemInput {
+  name: String!
+  description: String
+  price: Float!
+  restaurantId: Long!
+}
+
+input ReservationInput {
+  userId: Long!
+  restaurantId: Long!
+  tableNumber: Int
+  numberOfPeople: Int
+  start: DateTime!
+  end: DateTime!
+}
+
+input OrderItemInput {
+  itemId: Long!
+  quantity: Int!
+}
+
+input OrderInput {
+  restaurantId: Long!
+  userId: Long!
+  items: [OrderItemInput!]!
+}
+
+extend type Query {
+  addresses: [Address!]!
+  addressById(id: ID!): Address
+
+  users: [User!]!
+  userById(id: ID!): User
+  userByEmail(email: String!): User
+
+  restaurants: [Restaurant!]!
+  restaurantById(id: ID!): Restaurant
+
+  items: [Item!]!
+  itemById(id: ID!): Item
+
+  orders: [Order!]!
+  orderById(id: ID!): Order
+  ordersByRestaurant(restaurantId: Long!): [Order!]!
+  ordersByUser(userId: Long!): [Order!]!
+
+  reservations: [Reservation!]!
+  reservationsByOwner(ownerId: Long!): [Reservation!]!
+  reservationsByUser(userId: Long!): [Reservation!]!
+}
+
+extend type Mutation {
+  upsertAddress(input: AddressInput!): Address!
+  deleteAddress(id: ID!): Boolean!
+
+  createUser(name: String!, email: String!, password: String!, roles: [String!]): User!
+  updateUser(id: ID!, name: String, email: String, password: String, roles: [String!]): User!
+
+  createRestaurant(input: RestaurantInput!): Restaurant!
+  updateRestaurant(id: ID!, input: RestaurantInput!): Restaurant!
+  deleteRestaurant(id: ID!): Boolean!
+
+  createItem(input: ItemInput!): Item!
+  updateItem(id: ID!, input: ItemInput!): Item!
+  deleteItem(id: ID!): Boolean!
+
+  createOrder(input: OrderInput!): Order!
+  updateOrderStatus(id: ID!, status: OrderStatus!): Order!
+
+  createReservation(input: ReservationInput!): Reservation!
+  updateReservationStatus(id: ID!, status: ReservationStatus!): Reservation!
+}
+
+extend type Subscription {
+  orderCreated(restaurantId: ID): Order!
+  orderUpdated(restaurantId: ID): Order!
+  reservationCreated(restaurantId: ID): Reservation!
+  reservationUpdated(restaurantId: ID): Reservation!
+}
