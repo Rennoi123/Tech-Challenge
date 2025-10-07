@@ -53,7 +53,7 @@ class ItemGatewayAdapterTest {
         User user = new User(1L, "Joao", "joao@email.com", "123456", UserRoles.ADMIN, address);
 
         Restaurant restaurante = new Restaurant(1L, "Restaurante B", address, "Japonesa",
-                LocalTime.of(9,0), LocalTime.of(23,0), 1L, 50, 10);
+                LocalTime.of(9,0), LocalTime.of(23,0), 1L,100,200);
 
         addressEntity = new AddressEntity().fromDomain(address);
         userEntity = new UserEntity().fromDomain(user);

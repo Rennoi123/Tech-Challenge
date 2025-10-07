@@ -7,6 +7,7 @@ CREATE TABLE RESTAURANT (
       closing_time TIME NOT NULL,
       owner_id INT,
       capacity INT,
+      qtd_table INT,
       FOREIGN KEY (address_id) REFERENCES ADDRESS(id),
       FOREIGN KEY (owner_id) REFERENCES TB_USERS(id)
 );

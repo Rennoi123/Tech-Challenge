@@ -19,7 +19,7 @@ public class CreateReservationUseCase {
 
     private static final String USER_NOT_FOUND_MESSAGE_BY_ID = "Usuário não encontrado pelo ID: ";
     private static final String RESTAURANTE_NOT_FOUND_MESSAGE_BY_ID = "Restaurante não encontrado pelo ID: ";
-    private static final String INSUFFICIENT_TABLES = "Total de mesas insuficiente pois o total é: ";
+    private static final String INSUFFICIENT_TABLES = "O restaurante não possui mesas suficientes no momento. A capacidade disponível atende: ";
     private static final String  NUMBER_OF_POPLE_RESERVATION_EXCEEDS = "O número de pessoas da reserva excede a capacidade total do restaurante.";
 
     private final IReservationGateway reservationGateway;
@@ -77,7 +77,7 @@ public class CreateReservationUseCase {
         int availableCapacity = restaurant.getCapacity() - peopleInExistingReservations;
 
         if (newReservation.getNumberOfPeople() > availableCapacity) {
-            throw new IllegalArgumentException(INSUFFICIENT_TABLES + availableCapacity );
+            throw new IllegalArgumentException(INSUFFICIENT_TABLES + availableCapacity + " pessoas");
         }
     }
 
