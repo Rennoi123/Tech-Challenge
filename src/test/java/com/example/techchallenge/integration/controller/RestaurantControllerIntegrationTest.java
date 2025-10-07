@@ -138,7 +138,7 @@ public class RestaurantControllerIntegrationTest {
             {
                 "name": "Restaurante Atualizado",
                 "address": {
-                    "id": 1,
+                    "id": 999,
                     "street": "Rua Nova",
                     "number": "500",
                     "complement": "Loja 2",
