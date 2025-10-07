@@ -25,10 +25,9 @@ class RestaurantEntityTest {
     @Test
     void deveConverterDeDomainParaEntity() {
         Restaurant domain = new Restaurant(1L, "Restaurante A", address, "Italiana",
-                LocalTime.of(10, 0), LocalTime.of(22, 0), null,100);
+                LocalTime.of(10, 0), LocalTime.of(22, 0), 80,20);
 
         RestaurantEntity entity = RestaurantEntity.fromDomain(domain);
-
         assertEquals(domain.getId(), entity.getId());
         assertEquals(domain.getName(), entity.getName());
         assertEquals(domain.getCuisineType(), entity.getCuisineType());
@@ -45,6 +44,8 @@ class RestaurantEntityTest {
         entity.setOpeningTime(LocalTime.of(12, 0));
         entity.setClosingTime(LocalTime.of(23, 0));
         entity.setAddress(addressEntity);
+        entity.setCapacity(80);
+        entity.setQtdTable(20);
 
         Restaurant domain = entity.toDomain();
 

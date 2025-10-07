@@ -1,156 +1,202 @@
-/*package com.example.techchallenge.integration.controller;
+package com.example.techchallenge.integration.controller;
 
 import com.example.techchallenge.TechChallengeApplication;
-import com.example.techchallenge.integration.util.TestUtils;
 import io.restassured.RestAssured;
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.restassured.parsing.Parser;
+import io.restassured.response.ValidatableResponse;
+import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.TestPropertySource;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = TechChallengeApplication.class)
 @ActiveProfiles("test")
-@Transactional
-class ItemControllerIntegrationTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestPropertySource(locations = "classpath:application-test.properties")
+public class ItemControllerIntegrationTest {
 
     @LocalServerPort
     private int port;
 
-    private int idRestaurant = 0;
-
-    @Autowired
-    private TestUtils testUtils;
+    private String token;
+    private Long createdItemId;
+    private Long createdRestaurantId;
 
     @BeforeAll
-    static void setup() {
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.basePath = "/api/items";
-        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
-
-    @BeforeEach
-    void beforeEachTest() {
+    void setup() {
         RestAssured.port = port;
-    }
+        RestAssured.defaultParser = Parser.JSON;
 
-    @Test
-    @DisplayName("Deve criar um item com sucesso")
-    void deveCriarItemComSucesso() {
-        idRestaurant = getIdRestaurant();
-        String payload = gerarPayloadItem("Pizza Margherita", "Tradicional italiana", 39.90);
-
-        given()
-            .contentType(ContentType.JSON)
-            .body(payload)
-        .when()
-            .post()
-        .then()
-            .statusCode(201)
-            .body("id", notNullValue())
-            .body("name", equalTo("Pizza Margherita"))
-            .body("restaurantId", equalTo(idRestaurant));
-    }
-
-    @Test
-    @DisplayName("Deve atualizar item com sucesso")
-    void deveAtualizarItemComSucesso() {
-        int id = criarItemParaTeste("Pizza Mussarela");
-
-        String payloadAtualizado = gerarPayloadItem("Pizza Calabresa", "Com cebola e azeitona", 44.90);
-
-        given()
-            .contentType(ContentType.JSON)
-            .body(payloadAtualizado)
-            .pathParam("id", id)
-        .when()
-            .put("/{id}")
-        .then()
-            .statusCode(200)
-            .body("name", equalTo("Pizza Calabresa"))
-            .body("price", equalTo(44.90F));
-    }
-
-    @Test
-    @DisplayName("Deve listar itens por restaurante")
-    void deveListarItensPorRestaurante() {
-        idRestaurant = getIdRestaurant();
-        criarItemParaTeste("Pizza Portuguesa");
-
-        given()
-            .pathParam("restaurantId", idRestaurant)
-        .when()
-            .get("/restaurant/{restaurantId}")
-        .then()
-            .statusCode(200)
-            .body("$", not(empty()));
-    }
-
-    @Test
-    @DisplayName("Deve excluir item com sucesso")
-    void deveExcluirItemComSucesso() {
-        int id = criarItemParaTeste("Pizza Quatro Queijos");
-
-        given()
-            .pathParam("id", id)
-        .when()
-            .delete("/{id}")
-        .then()
-            .statusCode(204);
-    }
-
-    private int criarItemParaTeste(String nome) {
-        String payload = gerarPayloadItem(nome, "Descrição padrão", 49.90);
-
-        return given()
-            .contentType(ContentType.JSON)
-            .body(payload)
-        .when()
-            .post()
-        .then()
-            .statusCode(201)
-            .extract()
-            .path("id");
-    }
-
-    private String gerarPayloadItem(String name, String description, double price) {
-        idRestaurant = getIdRestaurant();
-
-        return """
+        String loginPayload = """
             {
-              "name": "%s",
-              "description": "%s",
-              "price": %s,
-              "dineInOnly": false,
-              "photoPath": "/images/default.jpg",
+                "email": "admin@example.com",
+                "password": "senha123"
+            }
+        """;
+
+        token = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(loginPayload)
+                .when()
+                .post("/api/users/login")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        String restaurantPayload = """
+            {
+              "name": "Restaurante Teste",
+              "address": {
+                "street": "Rua das Flores",
+                "number": "123",
+                "complement": "Apto 10",
+                "neighborhood": "Centro",
+                "city": "São Paulo",
+                "state": "SP",
+                "postalCode": "01234567"
+              },
+              "cuisineType": "Italiana",
+              "openingTime": "10:00:00",
+              "closingTime": "22:00:00",
+              "ownerId": 1
+            }
+        """;
+
+        createdRestaurantId = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+                .body(restaurantPayload)
+                .when()
+                .post("/api/restaurants")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .path("id");
+    }
+
+    @Test
+    @Order(1)
+    void deveCriarItem() {
+        String payload = """
+            {
+              "name": "Pizza Margherita",
+              "description": "Pizza clássica com molho de tomate, mussarela e manjericão.",
+              "price": 45.50,
+              "available": true,
               "restaurantId": %d
             }
-        """.formatted(
-                name,
-                description,
-                BigDecimal.valueOf(price).setScale(2, RoundingMode.HALF_UP).toPlainString(),
-                idRestaurant
-            );
+        """.formatted(createdRestaurantId);
+
+        ValidatableResponse response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+                .body(payload)
+                .when()
+                .post("/api/items")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .body("id", notNullValue())
+                .body("name", equalTo("Pizza Margherita"))
+                .body("available", equalTo(true));
+
+        createdItemId = Long.valueOf(response.extract().path("id").toString());
+        Assertions.assertNotNull(createdItemId, "O ID do item criado não deve ser nulo");
     }
 
-    private int getIdRestaurant() {
-        if (idRestaurant == 0) {
-            idRestaurant = testUtils.criarRestauranteParaTeste();
-        }
-        return idRestaurant;
+    @Test
+    @Order(2)
+    void deveListarItens() {
+        RestAssured
+                .given()
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/api/items")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", greaterThanOrEqualTo(1));
     }
-}*/
+
+    @Test
+    @Order(3)
+    void deveBuscarItemPorId() {
+        Assertions.assertNotNull(createdItemId, "O ID do item criado não pode ser nulo");
+
+        RestAssured
+                .given()
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", createdItemId)
+                .when()
+                .get("/api/items/{id}")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("id", equalTo(createdItemId.intValue()))
+                .body("name", equalTo("Pizza Margherita"));
+    }
+
+    @Test
+    @Order(4)
+    void deveAtualizarItem() {
+        Assertions.assertNotNull(createdItemId, "O ID do item criado não pode ser nulo");
+
+        String updatePayload = """
+            {
+              "name": "Pizza Quatro Queijos",
+              "description": "Pizza com quatro tipos de queijo.",
+              "price": 52.00,
+              "available": true,
+              "restaurantId": %d
+            }
+        """.formatted(createdRestaurantId);
+
+        RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", createdItemId)
+                .body(updatePayload)
+                .when()
+                .put("/api/items/{id}")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("name", equalTo("Pizza Quatro Queijos"))
+                .body("price", equalTo(52.00F));
+    }
+
+    @Test
+    @Order(5)
+    void deveExcluirItem() {
+        Assertions.assertNotNull(createdItemId, "O ID do item criado não pode ser nulo");
+
+        RestAssured
+                .given()
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", createdItemId)
+                .when()
+                .delete("/api/items/{id}")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @Order(6)
+    void deveRetornar404ItemInexistente() {
+        RestAssured
+                .given()
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", 9999)
+                .when()
+                .get("/api/items/{id}")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+}
