@@ -182,7 +182,59 @@ public class ItemControllerIntegrationTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
+    void deveBuscarItensPorNome() {
+        RestAssured
+                .given()
+                .header("Authorization", "Bearer " + token)
+                .queryParam("name", "Prato")
+                .when()
+                .get("/api/items/search")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", greaterThanOrEqualTo(1))
+                .body("[0].name", containsString("Prato"));
+    }
+
+    @Test
+    @Order(7)
+    void deveRetornarListaVaziaAoBuscarPorNomeInexistente() {
+        RestAssured
+                .given()
+                .header("Authorization", "Bearer " + token)
+                .queryParam("name", "InexistenteXYZ")
+                .when()
+                .get("/api/items/search")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", equalTo(0));
+    }
+
+    @Test
+    @Order(8)
+    void deveRetornar400AoCriarComCamposInvalidos() {
+        String payload = """
+            {
+                "name": "",
+                "description": "Sem nome e preço inválido",
+                "price": -10.0,
+                "restaurantId": %d
+            }
+        """.formatted(createdRestaurantId);
+
+        RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+                .body(payload)
+                .when()
+                .post("/api/items")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @Order(9)
     void deveExcluirItem() {
         Assertions.assertNotNull(createdItemId, "O ID do item criado não pode ser nulo");
 
@@ -197,7 +249,7 @@ public class ItemControllerIntegrationTest {
     }
 
     @Test
-    @Order(6)
+    @Order(10)
     void deveRetornar404ParaItemInexistente() {
         RestAssured
                 .given()
@@ -210,7 +262,7 @@ public class ItemControllerIntegrationTest {
     }
 
     @Test
-    @Order(7)
+    @Order(11)
     void deveRetornar401AoCriarSemToken() {
         String payload = """
             {
