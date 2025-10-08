@@ -2,6 +2,7 @@ package com.example.techchallenge.adapters.controllers.graphql;
 
 import com.example.techchallenge.core.domain.entities.Reservation;
 import com.example.techchallenge.core.domain.usecase.reservation.CreateReservationUseCase;
+import com.example.techchallenge.core.domain.usecase.reservation.ListReservationUseCase;
 import com.example.techchallenge.core.domain.usecase.reservation.ListReservationsByRestaurantOwnerUseCase;
 import com.example.techchallenge.core.domain.usecase.reservation.UpdateReservationStatusUseCase;
 import com.example.techchallenge.core.enums.ReservationStatusEnum;
@@ -21,20 +22,34 @@ import java.util.List;
 public class ReservationGraphqlController {
 
     private final ListReservationsByRestaurantOwnerUseCase listByOwner;
+
+    private final ListReservationUseCase listReservation;
     private final CreateReservationUseCase createReservation;
     private final UpdateReservationStatusUseCase updateReservationStatus;
 
     public ReservationGraphqlController(ListReservationsByRestaurantOwnerUseCase listByOwner,
+                                        ListReservationUseCase listReservation,
                                         CreateReservationUseCase createReservation,
                                         UpdateReservationStatusUseCase updateReservationStatus) {
         this.listByOwner = listByOwner;
         this.createReservation = createReservation;
         this.updateReservationStatus = updateReservationStatus;
+        this.listReservation = listReservation;
     }
 
 
     @QueryMapping
     public List<Reservation> reservationsByOwner() {
+        return listByOwner.execute();
+    }
+
+    @QueryMapping
+    public List<Reservation> reservations() {
+        return listReservation.execute();
+    }
+
+    @QueryMapping
+    public List<Reservation> reservationsByUserId() {
         return listByOwner.execute();
     }
 

@@ -88,4 +88,13 @@ public class ReservationGatewayAdapter implements IReservationGateway {
                 .map(ReservationEntity::toDomain)
                 .collect(Collectors.toList());
     }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Reservation> findAllByUserId(Long userId) {
+        return reservationRepository.findAllByUserId(userId).stream()
+                .map(ReservationEntity::toDomain)
+                .collect(Collectors.toList());
+    }
 }

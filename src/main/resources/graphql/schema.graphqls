@@ -157,8 +157,8 @@ extend type Query {
   ordersByUser(userId: Long!): [Order!]!
 
   reservations: [Reservation!]!
-  reservationsByOwner(ownerId: Long!): [Reservation!]!
-  reservationsByUser(userId: Long!): [Reservation!]!
+  reservationsByOwner: [Reservation!]!
+  reservationsByUser: [Reservation!]!
 }
 
 extend type Mutation {

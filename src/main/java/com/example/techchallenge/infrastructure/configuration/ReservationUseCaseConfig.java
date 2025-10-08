@@ -1,6 +1,7 @@
 package com.example.techchallenge.infrastructure.configuration;
 
 import com.example.techchallenge.core.domain.usecase.reservation.CreateReservationUseCase;
+import com.example.techchallenge.core.domain.usecase.reservation.ListReservationUseCase;
 import com.example.techchallenge.core.domain.usecase.reservation.ListReservationsByRestaurantOwnerUseCase;
 import com.example.techchallenge.core.domain.usecase.reservation.UpdateReservationStatusUseCase;
 import com.example.techchallenge.core.interfaces.IReservationGateway;
@@ -40,6 +41,15 @@ public class ReservationUseCaseConfig {
             ISecurityGateway securityGateway
     ) {
         return new ListReservationsByRestaurantOwnerUseCase(reservationGateway, restaurantGateway, userGateway, securityGateway);
+    }
+
+    @Bean
+    public ListReservationUseCase listReservationUseCase(
+            IReservationGateway reservationGateway,
+            IUserGateway userGateway,
+            ISecurityGateway securityGateway
+    ) {
+        return new ListReservationUseCase(reservationGateway, userGateway, securityGateway);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.techchallenge.core.interfaces;
 
 import com.example.techchallenge.core.domain.entities.Reservation;
+import com.example.techchallenge.core.domain.entities.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,4 +15,5 @@ public interface IReservationGateway {
     Reservation updateReservationStatus(Reservation reservation);
     List<Reservation> findByRestaurantId(Long restaurantId);
     List<Reservation> findByRestaurantIdIn(List<Long> restaurantIds);
+    List<Reservation> findAllByUserId(Long userId);
 }
