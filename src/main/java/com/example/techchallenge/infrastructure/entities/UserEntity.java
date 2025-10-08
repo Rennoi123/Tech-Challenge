@@ -62,6 +62,6 @@ public class UserEntity  {
     }
 
     public User toDomain() {
-        return new User(id, name, email, password, roles, address.toDomain());
+        return new User(id, name, email, password, roles,address != null ? address.toDomain() : null);
     }
 }

@@ -82,16 +82,19 @@ public class RestaurantGraphqlController {
             Long ownerId,
             String openingTime,
             String closingTime,
-            AddressInput address
+            AddressInput address,
+            Long qtdTable
     ) {}
 
     public record AddressInput(
+            Long id,
             String street,
             String city,
             String state,
-            String zipCode,
+            String postalCode,
             String number,
-            String complement
+            String complement,
+            String neighborhood
     ) {}
 
     private Restaurant toEntity(RestaurantInput input) {
@@ -101,15 +104,20 @@ public class RestaurantGraphqlController {
         restaurant.setOwnerId(input.ownerId());
         restaurant.setOpeningTime(LocalTime.parse(input.openingTime()));
         restaurant.setClosingTime(LocalTime.parse(input.closingTime()));
+        restaurant.setQtdtable(input.qtdTable.intValue());
+        restaurant.setCapacity(restaurant.getQtdtable() * 2);
 
         Address address = new Address();
         AddressInput addr = input.address();
+        address.setId(addr.id);
         address.setStreet(addr.street());
         address.setCity(addr.city());
         address.setState(addr.state());
-        address.setPostalCode(addr.zipCode());
+        address.setPostalCode(addr.postalCode());
         address.setNumber(addr.number());
         address.setComplement(addr.complement());
+        address.setNeighborhood(addr.neighborhood);
+
         restaurant.setAddress(address);
 
         return restaurant;

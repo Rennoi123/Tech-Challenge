@@ -2,33 +2,39 @@ scalar DateTime
 scalar Long
 
 enum OrderStatus {
-  PENDING
-  PREPARING
-  OUT_FOR_DELIVERY
-  DELIVERED
-  CANCELLED
+  PENDENTE,
+  EM_PREPARO,
+  CANCELADO,
+  FINALIZADO
 }
 
 enum ReservationStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
+  PENDENTE,
+  APROVADA,
+  CANCELADA
+}
+
+enum UserRole {
+  CLIENTE
+  RESTAURANTE
+  ADMIN
 }
 
 type Address {
   street: String!
   city: String!
   state: String!
-  zipCode: String!
+  postalCode: String!
   number: String
   complement: String
+  neighborhood: String!
 }
 
 type User {
   id: ID
   name: String!
   email: String!
-  roles: [String!]!
+  role: UserRole!
   createdAt: DateTime
   address: Address
 }
@@ -41,6 +47,7 @@ type Restaurant {
   openingTime: String
   closingTime: String
   address: Address
+  qtdTable: Long
 }
 
 type Item {
@@ -73,15 +80,17 @@ type Order {
   restaurantId: Long!
   userId: Long!
   status: OrderStatus!
-  itemOrders: [ItemOrder!]!
+  itemOrders: [ItemOrder]
   createdAt: DateTime
 }
 
 input AddressInput {
+  id: ID,
   street: String!
   city: String!
   state: String!
-  zipCode: String!
+  postalCode: String!
+  neighborhood: String!
   number: String
   complement: String
 }
@@ -93,6 +102,7 @@ input RestaurantInput {
   openingTime: String!
   closingTime: String!
   address: AddressInput!
+  qtdTable: Int
 }
 
 input ItemInput {
@@ -107,8 +117,9 @@ input ReservationInput {
   restaurantId: Long!
   tableNumber: Int
   numberOfPeople: Int
-  start: DateTime!
-  end: DateTime!
+  createdAt: DateTime
+  updatedAt: DateTime
+  reservationTime: DateTime!
 }
 
 input OrderItemInput {
@@ -122,13 +133,17 @@ input OrderInput {
   items: [OrderItemInput!]!
 }
 
+input ReservationStatusInput {
+  id: ID!
+  status: ReservationStatus!
+}
+
 extend type Query {
   addresses: [Address!]!
   addressById(id: ID!): Address
 
   users: [User!]!
   userById(id: ID!): User
-  userByEmail(email: String!): User
 
   restaurants: [Restaurant!]!
   restaurantById(id: ID!): Restaurant
@@ -147,11 +162,8 @@ extend type Query {
 }
 
 extend type Mutation {
-  upsertAddress(input: AddressInput!): Address!
-  deleteAddress(id: ID!): Boolean!
-
-  createUser(name: String!, email: String!, password: String!, roles: [String!]): User!
-  updateUser(id: ID!, name: String, email: String, password: String, roles: [String!]): User!
+  createUser(name: String!, email: String!, password: String!, role: UserRole!, address: AddressInput): User!
+  updateUser(id: ID!, name: String, email: String, password: String, role: UserRole!, address: AddressInput): User!
 
   createRestaurant(input: RestaurantInput!): Restaurant!
   updateRestaurant(id: ID!, input: RestaurantInput!): Restaurant!
@@ -165,7 +177,7 @@ extend type Mutation {
   updateOrderStatus(id: ID!, status: OrderStatus!): Order!
 
   createReservation(input: ReservationInput!): Reservation!
-  updateReservationStatus(id: ID!, status: ReservationStatus!): Reservation!
+  updateReservationStatus(reservationStatusInput: ReservationStatusInput): Reservation
 }
 
 extend type Subscription {

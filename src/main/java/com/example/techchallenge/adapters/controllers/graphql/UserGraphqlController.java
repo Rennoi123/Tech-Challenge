@@ -1,5 +1,6 @@
 package com.example.techchallenge.adapters.controllers.graphql;
 
+import com.example.techchallenge.core.domain.entities.Address;
 import com.example.techchallenge.core.domain.entities.User;
 import com.example.techchallenge.core.domain.usecase.user.CreateUserUseCase;
 import com.example.techchallenge.core.domain.usecase.user.GetUserUseCase;
@@ -57,17 +58,29 @@ public class UserGraphqlController {
             @Argument String name,
             @Argument String email,
             @Argument String password,
-            @Argument UserRoles role
+            @Argument UserRoles role,
+            @Argument AddressInput address
     ) {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
         user.setPassword(password);
 
+        Address addr = new Address();
+        addr.setId(address.id);
+        addr.setStreet(address.street());
+        addr.setCity(address.city());
+        addr.setState(address.state());
+        addr.setPostalCode(address.postalCode());
+        addr.setNumber(address.number());
+        addr.setComplement(address.complement());
+        addr.setNeighborhood(address.Neighborhood);
+        user.setAddress(addr);
+
         if (role != null) {
             user.setRole(role);
         } else {
-            user.setRole(role);
+            user.setRole(UserRoles.CLIENTE);
         }
 
         return createUserUseCase.execute(user);
@@ -81,13 +94,25 @@ public class UserGraphqlController {
             @Argument String name,
             @Argument String email,
             @Argument String password,
-            @Argument UserRoles role
+            @Argument UserRoles role,
+            @Argument AddressInput address
     ) {
         User user = new User();
         user.setId(id);
         user.setName(name);
         user.setEmail(email);
         user.setPassword(password);
+
+        Address addr = new Address();
+        addr.setId(address.id);
+        addr.setStreet(address.street());
+        addr.setCity(address.city());
+        addr.setState(address.state());
+        addr.setPostalCode(address.postalCode());
+        addr.setNeighborhood(address.Neighborhood);
+        addr.setNumber(address.number());
+        addr.setComplement(address.complement());
+        user.setAddress(addr);
 
         if (role != null ) {
             user.setRole(role);
@@ -103,4 +128,16 @@ public class UserGraphqlController {
                 .message(ex.getMessage())
                 .build();
     }
+
+    public record AddressInput(
+            Long id,
+            String street,
+            String city,
+            String state,
+            String postalCode,
+            String number,
+            String complement,
+            String Neighborhood
+    ) {}
+
 }
