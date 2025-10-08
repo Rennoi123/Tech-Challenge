@@ -307,6 +307,6 @@ query {
 ## 📦 Coleção do Postman
 A coleção Postman permite testar todos os endpoints REST e GraphQL do sistema:
 
-[<img src="https://run.pstmn.io/button.svg" alt="Run in Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/22747303-2c640bf5-8521-46f6-a7ae-6771d7389f14?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D22747303-2c640bf5-8521-46f6-a7ae-6771d7389f14%26entityType%3Dcollection%26workspaceId%3D492ed606-853d-4a06-87d3-27a14c08eaa8)
+[<img src="https://run.pstmn.io/button.svg" alt="Run in Postman" style="width: 128px; height: 32px;">]([https://app.getpostman.com/run-collection/22747303-2c640bf5-8521-46f6-a7ae-6771d7389f14?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D22747303-2c640bf5-8521-46f6-a7ae-6771d7389f14%26entityType%3Dcollection%26workspaceId%3D492ed606-853d-4a06-87d3-27a14c08eaa8](https://www.postman.com/red-resonance-119741/workspace/collection-tech-challenge-r-m/collection/22747303-4e65fbcc-27b0-42fb-b97e-665e6ac1b293?action=share&source=copy-link&creator=22747303))
 
 ---
