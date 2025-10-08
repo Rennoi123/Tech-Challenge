@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,7 +23,7 @@ public class Order {
     private String orderDate;
     private String lastModifiedDate;
     private String status;
-    private List<ItemOrder> itemOrders;
+    private List<ItemOrder> itemOrders = new ArrayList<>();
 
 
     public Order(

@@ -15,20 +15,27 @@ enum ReservationStatus {
   CANCELLED
 }
 
+enum UserRole {
+  CLIENTE
+  RESTAURANTE
+  ADMIN
+}
+
 type Address {
   street: String!
   city: String!
   state: String!
-  zipCode: String!
+  postalCode: String!
   number: String
   complement: String
+  neighborhood: String!
 }
 
 type User {
   id: ID
   name: String!
   email: String!
-  roles: [String!]!
+  role: UserRole!
   createdAt: DateTime
   address: Address
 }
@@ -41,6 +48,7 @@ type Restaurant {
   openingTime: String
   closingTime: String
   address: Address
+  qtdTable: Long
 }
 
 type Item {
@@ -78,10 +86,12 @@ type Order {
 }
 
 input AddressInput {
+  id: ID,
   street: String!
   city: String!
   state: String!
-  zipCode: String!
+  postalCode: String!
+  neighborhood: String!
   number: String
   complement: String
 }
@@ -93,6 +103,7 @@ input RestaurantInput {
   openingTime: String!
   closingTime: String!
   address: AddressInput!
+  qtdTable: Int
 }
 
 input ItemInput {
@@ -128,7 +139,6 @@ extend type Query {
 
   users: [User!]!
   userById(id: ID!): User
-  userByEmail(email: String!): User
 
   restaurants: [Restaurant!]!
   restaurantById(id: ID!): Restaurant
@@ -147,11 +157,8 @@ extend type Query {
 }
 
 extend type Mutation {
-  upsertAddress(input: AddressInput!): Address!
-  deleteAddress(id: ID!): Boolean!
-
-  createUser(name: String!, email: String!, password: String!, roles: [String!]): User!
-  updateUser(id: ID!, name: String, email: String, password: String, roles: [String!]): User!
+  createUser(name: String!, email: String!, password: String!, role: UserRole!, address: AddressInput): User!
+  updateUser(id: ID!, name: String, email: String, password: String, role: UserRole!, address: AddressInput): User!
 
   createRestaurant(input: RestaurantInput!): Restaurant!
   updateRestaurant(id: ID!, input: RestaurantInput!): Restaurant!
