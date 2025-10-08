@@ -31,7 +31,7 @@ public class RestaurantEntity {
     @Column(nullable = false)
     private LocalTime closingTime;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private UserEntity owner;
 
