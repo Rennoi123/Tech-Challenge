@@ -151,7 +151,7 @@ extend type Query {
   items: [Item!]!
   itemById(id: ID!): Item
 
-  orders: [Order!]!
+  orders(status: String): [Order]
   orderById(id: ID!): Order
   ordersByRestaurant(restaurantId: Long!): [Order!]!
   ordersByUser(userId: Long!): [Order!]!
