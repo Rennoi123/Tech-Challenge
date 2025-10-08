@@ -2,17 +2,16 @@ scalar DateTime
 scalar Long
 
 enum OrderStatus {
-  PENDING
-  PREPARING
-  OUT_FOR_DELIVERY
-  DELIVERED
-  CANCELLED
+  PENDENTE,
+  EM_PREPARO,
+  CANCELADO,
+  FINALIZADO
 }
 
 enum ReservationStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
+  PENDENTE,
+  APROVADA,
+  CANCELADA
 }
 
 enum UserRole {
@@ -81,7 +80,7 @@ type Order {
   restaurantId: Long!
   userId: Long!
   status: OrderStatus!
-  itemOrders: [ItemOrder!]!
+  itemOrders: [ItemOrder]
   createdAt: DateTime
 }
 
@@ -118,8 +117,9 @@ input ReservationInput {
   restaurantId: Long!
   tableNumber: Int
   numberOfPeople: Int
-  start: DateTime!
-  end: DateTime!
+  createdAt: DateTime
+  updatedAt: DateTime
+  reservationTime: DateTime!
 }
 
 input OrderItemInput {
@@ -131,6 +131,11 @@ input OrderInput {
   restaurantId: Long!
   userId: Long!
   items: [OrderItemInput!]!
+}
+
+input ReservationStatusInput {
+  id: ID!
+  status: ReservationStatus!
 }
 
 extend type Query {
@@ -172,7 +177,7 @@ extend type Mutation {
   updateOrderStatus(id: ID!, status: OrderStatus!): Order!
 
   createReservation(input: ReservationInput!): Reservation!
-  updateReservationStatus(id: ID!, status: ReservationStatus!): Reservation!
+  updateReservationStatus(reservationStatusInput: ReservationStatusInput): Reservation
 }
 
 extend type Subscription {
